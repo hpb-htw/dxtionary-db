@@ -9,20 +9,17 @@ target_include_directories(sqlite3
 )
 
 target_compile_definitions(sqlite3
-    INTERFACE SQLITE_THREADSAFE=0
-    INTERFACE SQLITE_ENABLE_FTS4
-    INTERFACE SQLITE_ENABLE_FTS5
-    INTERFACE SQLITE_ENABLE_JSON1
-    INTERFACE SQLITE_ENABLE_RTREE
-    INTERFACE SQLITE_ENABLE_EXPLAIN_COMMENTS
-    INTERFACE SQLITE_CORE
+    PRIVATE SQLITE_THREADSAFE=0
+    PRIVATE SQLITE_ENABLE_FTS4
+    PRIVATE SQLITE_ENABLE_FTS5
+    PRIVATE SQLITE_ENABLE_JSON1
+    PRIVATE SQLITE_ENABLE_RTREE
+    PRIVATE SQLITE_ENABLE_EXPLAIN_COMMENTS
+    PRIVATE SQLITE_CORE
 )
 
 target_compile_options(sqlite3 PRIVATE
-    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
-              -Wall -pedantic -Os>
-    $<$<CXX_COMPILER_ID:MSVC>:
-              /W4>
+              -Wall -pedantic -Os
 )
 
 
@@ -39,10 +36,7 @@ target_include_directories(spellfix
 )
 
 target_compile_options(spellfix PRIVATE
-    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
-              -Wall -pedantic>
-    $<$<CXX_COMPILER_ID:MSVC>:
-              /W4>
+              -Wall -pedantic
 )
 
 

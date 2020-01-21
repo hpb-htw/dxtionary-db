@@ -28,15 +28,37 @@ list(APPEND EXTRA_LIBS sqlite3 spellfix)
 
 
 # add the executable
-add_executable(dxtionary-db dxtionary-db.cpp sqlite3.c spellfix.c)
+add_executable(dxtionary-db dxtionary-db.c)
 target_link_libraries(dxtionary-db PUBLIC
-    $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:
-        ${EXTRA_LIBS} -ldl -lm>
-    $<$<CXX_COMPILER_ID:MSVC>:
-        ${EXTRA_LIBS}>
+        ${EXTRA_LIBS} -ldl -lm
 )
 
 
 target_include_directories(dxtionary-db PUBLIC
     "${PROJECT_BINARY_DIR}"
 )
+
+
+# Simple test; run with ctest
+
+enable_testing()
+
+# does the application run
+add_test(NAME Usage COMMAND dxtionary-db)
+set_tests_properties(Usage
+  PROPERTIES PASS_REGULAR_EXPRESSION "Usage:.*DATABASE SQL-STATEMENT"
+)
+
+
+# define a function to simplify adding tests
+function(do_test number target select result)
+    add_test(NAME Comp${number} COMMAND ${target} "/tmp/test.db" ${select})
+    message(${select})
+    set_tests_properties( Comp${number}
+        PROPERTIES PASS_REGULAR_EXPRESSION ${result}
+    )
+endfunction(do_test)
+
+do_test(Nr1 dxtionary-db "SELECT editdist3(\"Julia\", \"Jullian\") as dist;" "dist = 200")
+do_test(Nr2 dxtionary-db "SELECT json_quote(json_object(\"name\", \"Jull\nian\")) as json;" "json =.*")
+
