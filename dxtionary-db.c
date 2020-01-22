@@ -4,7 +4,6 @@
  * */
 #include <stdio.h>
 #include <sqlite3.h>
-/* #include <sqlite3ext.h> */
 
 #include "dxtionary_version.h"
 
@@ -38,7 +37,6 @@ int main(int argc, const char* argv[])
 		return 1;
 	}
 
-    sqlite3_auto_extension((void*)sqlite3_spellfix_init);
     sqlite3 *db;
     int openDbOk = sqlite3_open(argv[1], &db);
     if (openDbOk != 0)

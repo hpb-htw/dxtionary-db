@@ -16,6 +16,7 @@ target_compile_definitions(sqlite3
     PRIVATE SQLITE_ENABLE_RTREE
     PRIVATE SQLITE_ENABLE_EXPLAIN_COMMENTS
     PRIVATE SQLITE_CORE
+    PRIVATE SQLITE_EXTRA_INIT=core_init
 )
 
 target_compile_options(sqlite3 PRIVATE
@@ -23,20 +24,5 @@ target_compile_options(sqlite3 PRIVATE
 )
 
 
-
-# spellfix
-add_library(spellfix STATIC
-    spellfix.c
-    sqlite3ext.h
-)
-
-
-target_include_directories(spellfix
-    INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
-target_compile_options(spellfix PRIVATE
-              -Wall -pedantic
-)
 
 
