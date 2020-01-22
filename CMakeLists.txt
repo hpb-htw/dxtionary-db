@@ -21,7 +21,7 @@ list(APPEND EXTRA_LIBS sqlite3)
 
 
 # add the executable
-add_executable(dxtionary-db dxtionary-db.c)
+add_executable(dxtionary-db dxtionary-db.cpp)
 target_link_libraries(dxtionary-db PUBLIC
         ${EXTRA_LIBS} -ldl -lm
 )
