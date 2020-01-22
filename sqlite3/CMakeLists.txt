@@ -1,6 +1,6 @@
 # sqlite
 add_library(sqlite3 STATIC
-    sqlite3.c
+    sqlite3_spellfix.c
     sqlite3.h
 )
 
