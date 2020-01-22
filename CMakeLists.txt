@@ -44,14 +44,16 @@ set_tests_properties(Usage
 
 
 # define a function to simplify adding tests
-function(do_test number target select result)
-    add_test(NAME Comp${number} COMMAND ${target} "/tmp/test.db" ${select})
-    message(${select})
-    set_tests_properties( Comp${number}
+function(do_test name target select result)
+    add_test(NAME Comp${name}
+        COMMAND ${target} "/tmp/test.db" ${select}
+    )
+    message(select)
+    set_tests_properties( Comp${name}
         PROPERTIES PASS_REGULAR_EXPRESSION ${result}
     )
 endfunction(do_test)
 
-do_test(Nr1 dxtionary-db "SELECT editdist3(\"Julia\", \"Jullian\") as dist;" "dist = 200")
-do_test(Nr2 dxtionary-db "SELECT json_quote(json_object(\"name\", \"Jull\nian\")) as json;" "json =.*")
-
+do_test(editdist3 dxtionary-db "SELECT editdist3(\"Julia\", \"Jullian\") as dist;" "dist = 200")
+do_test(json_quote dxtionary-db "SELECT json_quote(json_object(\"name\", \"Jull\nian\")) as json;" "json =.*")
+# do_test(sql_error dxtionary-db "CREATE TABLE IF NOT EXIST wiktionary(a TEXT, b TEXT, c TEXT); INSERT INTO wiktionary VALUES('D', 'DD', 'Das Buchstaben D', 'X')" "SQL error: table wiktionary has 3 columns but 4 values were supplied")
