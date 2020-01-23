@@ -1,5 +1,8 @@
+cmake_minimum_required(VERSION 3.12)
 # sqlite
-set(SQLITE_SPELLFIX "sqlite3_spellfix.c")
+set(SQLITE_SPELLFIX "${CMAKE_CURRENT_BINARY_DIR}/sqlite3_spellfix.c")
+set(sqlite3_dep sqlite3.c spellfix.c extra_init.c.in)
+
 add_library(sqlite3 STATIC
     ${SQLITE_SPELLFIX}
     sqlite3.h
@@ -25,22 +28,8 @@ target_compile_options(sqlite3 PRIVATE
      -Wall -pedantic -Os
 )
 
-
-# generate sqlite3_spellfix.c
-# It could be nice if I have cmake 3.12 or newer installed
-# => use list(TRANSFORM ...) to append dir to each of
-# sqlite3.c spellfix.c extra_init.in.c
-
-set(sqlite3_dep sqlite3.c spellfix.c extra_init.in.c)
-function(prepend var prefix file_list)
-   set(listVar "")
-   foreach(f ${file_list})
-      list(APPEND listVar "${prefix}/${f}")
-   endforeach(f)
-   set(${var} "${listVar}" PARENT_SCOPE)
-endfunction(prepend)
-prepend(sqlite3_dep_list ${CMAKE_CURRENT_SOURCE_DIR} "${sqlite3_dep}")
-# list(TRANSFORM sqlite3_dep PREPEND ${CMAKE_CURRENT_SOURCE_DIR}) # would do the job
+set(sqlite3_dep_list ${sqlite3_dep})
+list(TRANSFORM sqlite3_dep_list PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/)
 add_custom_command(OUTPUT ${SQLITE_SPELLFIX}
     DEPENDS ${sqlite_dep}
     COMMAND
