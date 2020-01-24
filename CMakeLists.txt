@@ -15,15 +15,10 @@ target_compile_options(tutorial_compiler_flags INTERFACE
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 
-
-
 configure_file(dxtionary_version.h.in dxtionary_version.h)
 
 # add the sqlite3 library
 add_subdirectory(sqlite3)
-list(APPEND EXTRA_LIBS sqlite3)
-
-
 
 
 # add the executable
@@ -34,11 +29,8 @@ target_include_directories(dxtionary-db PUBLIC
     "${PROJECT_BINARY_DIR}"
 )
 target_link_libraries(dxtionary-db PUBLIC
-        ${EXTRA_LIBS} -ldl -lm
+    sqlite3 -ldl -lm
 )
-
-
-
 
 add_executable(decompress-plain-db
     decompress_plain_db.cpp
@@ -47,7 +39,7 @@ add_executable(decompress-plain-db
 )
 
 target_link_libraries(decompress-plain-db
-        ${EXTRA_LIBS} -llzma
+    -llzma
 )
 
 
