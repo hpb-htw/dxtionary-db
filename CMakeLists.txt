@@ -27,14 +27,27 @@ list(APPEND EXTRA_LIBS sqlite3)
 
 
 # add the executable
-add_executable(dxtionary-db dxtionary-db.cpp)
+add_executable(dxtionary-db
+    dxtionary_db.cpp
+)
+target_include_directories(dxtionary-db PUBLIC
+    "${PROJECT_BINARY_DIR}"
+)
 target_link_libraries(dxtionary-db PUBLIC
         ${EXTRA_LIBS} -ldl -lm
 )
 
 
-target_include_directories(dxtionary-db PUBLIC
-    "${PROJECT_BINARY_DIR}"
+
+
+add_executable(decompress-plain-db
+    decompress_plain_db.cpp
+    xz_stream.cpp
+    xz_stream.h
+)
+
+target_link_libraries(decompress-plain-db
+        ${EXTRA_LIBS} -llzma
 )
 
 

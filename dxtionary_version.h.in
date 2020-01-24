@@ -1,4 +1,4 @@
-// the configured options and settings for Tutorial
+// the configured options and settings for dxtionary-db
 #define dxtionary_VERSION_MAJOR @dxtionary-db_VERSION_MAJOR@
 #define dxtionary_VERSION_MINOR @dxtionary-db_VERSION_MINOR@
 #define dxtionary_VERSION_PATCH @dxtionary-db_VERSION_PATCH@

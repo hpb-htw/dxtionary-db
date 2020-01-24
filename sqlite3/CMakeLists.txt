@@ -9,8 +9,7 @@ add_library(sqlite3 STATIC
 )
 
 target_include_directories(sqlite3
-    INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_compile_definitions(sqlite3
@@ -24,8 +23,8 @@ target_compile_definitions(sqlite3
     PRIVATE SQLITE_EXTRA_INIT=extra_init
 )
 
-target_compile_options(sqlite3 PRIVATE
-     -Wall -pedantic -Os
+target_compile_options(sqlite3
+    PRIVATE -Wall -pedantic -Os
 )
 
 set(sqlite3_dep_list ${sqlite3_dep})
