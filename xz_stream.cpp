@@ -17,44 +17,44 @@ int LZMAStreamBuf::underflow()
 
     while(true)
     {
-        m_lzmaStream.next_out =
-               reinterpret_cast<unsigned char*>(m_pDecompressedBuf.get());
-        m_lzmaStream.avail_out = m_nBufLen;
+        lzmaStream.next_out =
+               reinterpret_cast<unsigned char*>(decompressedBuffer.get());
+        lzmaStream.avail_out = bufferLength;
 
-        if(m_lzmaStream.avail_in == 0)
+        if(lzmaStream.avail_in == 0)
         {
-            // Read from the file, maximum m_nBufLen bytes
-            m_pIn->read(&m_pCompressedBuf[0], m_nBufLen);
+            // Read from the file, maximum bufferLength bytes
+            instream->read(&compressedBuffer[0], bufferLength);
 
             // check for possible I/O error
-            if(m_pIn->bad())
+            if(instream->bad())
                 throw std::runtime_error
                  ("LZMAStreamBuf: Error while reading the provided input stream!");
 
-            m_lzmaStream.next_in =
-                 reinterpret_cast<unsigned char*>(m_pCompressedBuf.get());
-            m_lzmaStream.avail_in = m_pIn->gcount();
+            lzmaStream.next_in =
+                 reinterpret_cast<unsigned char*>(compressedBuffer.get());
+            lzmaStream.avail_in = instream->gcount();
         }
 
         // check for eof of the compressed file;
         // if yes, forward this information to the LZMA decoder
-        if(m_pIn->eof())
+        if(instream->eof())
             action = LZMA_FINISH;
 
         // DO the decoding
-        ret = lzma_code(&m_lzmaStream, action);
+        ret = lzma_code(&lzmaStream, action);
 
         // check for data
         // NOTE: avail_out gives that amount of data which is available for LZMA to write!
         //         NOT the size of data which has been written for us!
-        if(m_lzmaStream.avail_out < m_nBufLen)
+        if(lzmaStream.avail_out < bufferLength)
         {
-            const size_t nDataAvailable = m_nBufLen - m_lzmaStream.avail_out;
+            const size_t nDataAvailable = bufferLength - lzmaStream.avail_out;
 
             // Let std::streambuf know how much data is available in the buffer now
-            setg(&m_pDecompressedBuf[0], &m_pDecompressedBuf[0],
-                               &m_pDecompressedBuf[0] + nDataAvailable);
-            return traits_type::to_int_type(m_pDecompressedBuf[0]);
+            setg(&decompressedBuffer[0], &decompressedBuffer[0],
+                 &decompressedBuffer[0] + nDataAvailable);
+            return traits_type::to_int_type(decompressedBuffer[0]);
         }
 
         if(ret != LZMA_OK)
@@ -63,8 +63,8 @@ int LZMAStreamBuf::underflow()
             {
                 // This return code is desired if eof of the source file has been reached
                 assert(action == LZMA_FINISH);
-                assert(m_pIn->eof());
-                assert(m_lzmaStream.avail_out == m_nBufLen);
+                assert(instream->eof());
+                assert(lzmaStream.avail_out == bufferLength);
                 return traits_type::eof();
             }
 
