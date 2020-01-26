@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sqlite3.h>
 
-#include "dxtionary_version.h"
+#include "../dxtionary_version.h"
 
 
 using namespace std;
