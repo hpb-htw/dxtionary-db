@@ -59,6 +59,21 @@ target_link_libraries(gz-file-stream-test
         gz_file_stream
 )
 
+# copy script.sh to build-dir, just for test only
+add_custom_target(dummy ALL
+    COMMAND echo "This is ALL target 'zoo', and it depends on ${TEST_FILE}"
+    DEPENDS
+        script.sh
+    VERBATIM
+)
+add_custom_command(OUTPUT script.sh
+    COMMENT
+        "creating script.sh"
+    COMMAND
+        cp ../../script.sh ..
+)
+
+
 # Simple test; run with ctest
 enable_testing()
 

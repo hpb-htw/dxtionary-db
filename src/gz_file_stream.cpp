@@ -50,9 +50,12 @@ GZFileStreamBuffer::~GZFileStreamBuffer()
 
 int GZFileStreamBuffer::underflow()
 {
+	if (!inStream) {
+		return traits_type::eof();
+	}
 	if (this->gptr() && (this->gptr() < this->egptr()))
 	{
-		return std::char_traits<char>::to_int_type(*this->gptr());
+		return traits_type::to_int_type(*this->gptr());
 	}
 
 	int putback = int(this->gptr() - this->eback());
@@ -60,17 +63,17 @@ int GZFileStreamBuffer::underflow()
 		putback = 4;
 	}
 
-	char_traits<char>::move(deflateBuffer + (4 - putback), this->gptr() - putback, putback);
+	traits_type::move(deflateBuffer + (4 - putback), this->gptr() - putback, putback);
 
 	int n = readFromGzStream(deflateBuffer + 4, BUFFER_SIZE - 4);
 	if (n <= 0) {
-		return char_traits<char>::eof();
+		return traits_type::eof();
 	}
 
 	this->setg(deflateBuffer + (4 - putback), deflateBuffer + 4, deflateBuffer + 4 + n);
 
 	// return next character
-	return char_traits<char>::to_int_type(*this->gptr());
+	return traits_type::to_int_type(*this->gptr());
 }
 
 int GZFileStreamBuffer::readFromGzStream(char *buffer, std::streamsize length)
