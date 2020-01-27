@@ -1,4 +1,4 @@
-#include "gz_file_stream.hpp"
+#include "gz_stream.hpp"
 
 #include <iostream>
 #include <fstream>

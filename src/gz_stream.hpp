@@ -22,11 +22,9 @@ private:
 	bool eof = false;
 	z_stream zStream;
 
+	std::istream*  inStream; // gz stream source
 	char* inflateBuffer;
 	char_type* deflateBuffer;
-	std::istream*  inStream; // gz stream source
-
-	//const std::streamsize _bufsize = 1024;
 
 	int readFromGzStream(char* buffer, std::streamsize length);
 };

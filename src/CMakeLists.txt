@@ -24,17 +24,19 @@ add_executable(decompress-plain-db
 )
 target_link_libraries(decompress-plain-db
     PRIVATE
-        gz_file_stream
+        gz_stream
 )
-add_library(gz_file_stream
+add_library(gz_stream
     STATIC
-        gz_file_stream.cpp
-        gz_file_stream.hpp
+        gz_stream.cpp
+        gz_stream.hpp
 )
-target_link_libraries(gz_file_stream
+target_link_libraries(gz_stream
     PRIVATE
         zlibstatic
 )
+
+
 
 ## xz-stream-file-test
 add_executable(xz-stream-test
@@ -49,7 +51,7 @@ target_link_libraries(xz-stream-test
 
 # copy script.sh to build-dir, just for test only
 add_custom_target(dummy ALL
-    COMMAND echo "This is ALL target 'zoo', and it depends on ${TEST_FILE}"
+    COMMAND echo "dummy target to trigger copy file ${TEST_FILE}"
     DEPENDS
         script.sh
     VERBATIM
