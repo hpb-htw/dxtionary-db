@@ -47,12 +47,7 @@ list(TRANSFORM sqlite3_dep_list PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/)
 #concat("${sqlite3_dep_list}" ${SQLITE_SPELLFIX})
 
 if(WIN32)
-    add_custom_command(OUTPUT ${SQLITE_SPELLFIX}
-        DEPENDS ${sqlite_dep}
-        COMMAND
-        # cat works well on almost platform, except windows :P
-        type ${sqlite3_dep_list} > ${SQLITE_SPELLFIX}
-    )
+    concat("${sqlite3_dep_list}" ${SQLITE_SPELLFIX})
 else()
     add_custom_command(OUTPUT ${SQLITE_SPELLFIX}
         DEPENDS ${sqlite_dep}
