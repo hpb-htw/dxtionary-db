@@ -15,7 +15,7 @@ target_include_directories(dxtionary-db PUBLIC
     "${PROJECT_BINARY_DIR}"
 )
 target_link_libraries(dxtionary-db PUBLIC
-    sqlite3 -ldl -lm
+    sqlite3 -lm
 )
 
 ## decompress-plain-db
@@ -35,7 +35,10 @@ target_link_libraries(gz_stream
     PRIVATE
         zlibstatic
 )
-
+target_include_directories(gz_stream
+    PUBLIC
+        ${PROJECT_BINARY_DIR}/../ext/zlib
+)
 
 #[===[
 ## xz-stream-file-test
