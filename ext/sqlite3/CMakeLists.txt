@@ -30,25 +30,26 @@ target_compile_options(sqlite3
 )
 
 function(concat sources destination)
-    message(STATUS ${destination})
     file(WRITE ${destination} "")
+    message(STATUS "concat")
     foreach( inFile ${sources} )
+        message(STATUS "        ${inFile}")
         file(READ ${inFile} temp)
         file(APPEND ${destination} "${temp}")
     endforeach()
+    message(STATUS "     to ${destination}")
 endfunction()
 
 
 set(sqlite3_dep_list ${sqlite3_dep})
 list(TRANSFORM sqlite3_dep_list PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/)
-concat("${sqlite3_dep_list}" ${SQLITE_SPELLFIX})
+#concat("${sqlite3_dep_list}" ${SQLITE_SPELLFIX})
 
 add_custom_command(OUTPUT ${SQLITE_SPELLFIX}
     DEPENDS ${sqlite_dep}
     COMMAND
         # cat works well on almost platform, except windows :P
-        #cat ${sqlite3_dep_list} > ${SQLITE_SPELLFIX}
-        echo "nix"
+        cat ${sqlite3_dep_list} > ${SQLITE_SPELLFIX}
 )
 
 

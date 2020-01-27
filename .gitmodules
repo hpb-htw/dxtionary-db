@@ -1,0 +1,3 @@
+[submodule "ext/zlib"]
+	path = ext/zlib
+	url = https://hpb-htw@github.com/hpb-htw/zlib.git

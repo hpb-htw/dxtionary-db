@@ -15,8 +15,7 @@ class LZMAStreamBuf : public std::streambuf
 {
 public:
     LZMAStreamBuf(std::istream* pIn)
-        : instream(pIn)
-        , lzmaStream(LZMA_STREAM_INIT)
+        : instream(pIn) , lzmaStream(LZMA_STREAM_INIT)
     {
         compressedBuffer.reset(new char[CHUNK_SIZE]);
         decompressedBuffer.reset(new char[CHUNK_SIZE]);
@@ -25,10 +24,11 @@ public:
         setg(&decompressedBuffer[0], &decompressedBuffer[1], &decompressedBuffer[1]);
 
         // try to open the encoder:
-        lzma_ret ret = lzma_stream_decoder
-               (&lzmaStream, std::numeric_limits<uint64_t>::max(), LZMA_CONCATENATED);
-        if(ret != LZMA_OK)
-            throw std::runtime_error("LZMA decoder could not be opened\n");
+        lzma_ret ret = lzma_stream_decoder (&lzmaStream, std::numeric_limits<uint64_t>::max(), LZMA_CONCATENATED);
+
+        if(ret != LZMA_OK) {
+			throw std::runtime_error("LZMA decoder could not be opened\n");
+		}
 
         lzmaStream.avail_in = 0;
     }
