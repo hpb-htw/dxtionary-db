@@ -1,6 +1,7 @@
-#include "xz_stream.h"
+#include "gz_file_stream.hpp"
 
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -22,15 +23,20 @@ int main(int argc, const char** argv) {
     //TODO: check if dicFileName exist
     try {
         ifstream ifs(dicFileName, ios::in | ios::binary);
-        LZMAStreamBuf lzmaBuf(&ifs);
-        istream decompressedStream(&lzmaBuf);
+		GZFileStreamBuffer gzBuffer(&ifs);
+        istream decompressedStream(&gzBuffer);
+
 
         while(!decompressedStream.eof() && !decompressedStream.bad())
         {
-            string sLine;
-            getline(decompressedStream, sLine);
-            cout << sLine << endl;
+            string line;
+            getline(decompressedStream, line);
+            cout <<  line ;
+            if (!decompressedStream.eof() ) {
+            	cout << endl;
+            }
         }
+
     }catch (...) {
         return BAD_DICTIONARY_FILE;
     }

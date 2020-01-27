@@ -21,42 +21,30 @@ target_link_libraries(dxtionary-db PUBLIC
 ## decompress-plain-db
 add_executable(decompress-plain-db
     decompress_plain_db.cpp
-    xz_stream.cpp
-    xz_stream.h
 )
-
 target_link_libraries(decompress-plain-db
-    -llzma
+    PRIVATE
+        gz_file_stream
 )
-
-## zlibexample.c (Usage example; remove after understand how zlib works)
-add_executable(zlibexample
-    zlibexample.c
-)
-
-target_link_libraries(zlibexample
-    zlibstatic
-)
-
-## gz-stream-file-test
 add_library(gz_file_stream
     STATIC
         gz_file_stream.cpp
         gz_file_stream.hpp
 )
-
 target_link_libraries(gz_file_stream
     PRIVATE
         zlibstatic
 )
 
-add_executable(gz-file-stream-test
-    gz_file_stream_test.cpp
+## xz-stream-file-test
+add_executable(xz-stream-test
+    xz_stream_test.cpp
+    xz_stream.cpp
+    xz_stream.h
 )
 
-target_link_libraries(gz-file-stream-test
-    PRIVATE
-        gz_file_stream
+target_link_libraries(xz-stream-test
+    -llzma
 )
 
 # copy script.sh to build-dir, just for test only
@@ -74,7 +62,7 @@ add_custom_command(OUTPUT script.sh
 )
 
 
-# Simple test; run with ctest
+# Simple sqlite3 compile test; run with ctest
 enable_testing()
 
 # does the application run

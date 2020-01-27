@@ -66,7 +66,6 @@ int GZFileStreamBuffer::underflow()
 	traits_type::move(deflateBuffer + (4 - putback), this->gptr() - putback, putback);
 
 	int n = readFromGzStream(deflateBuffer + 4, BUFFER_SIZE - 4);
-	cerr << n << " + ";
 	if (n <= 0) {
 		return traits_type::eof();
 	}
