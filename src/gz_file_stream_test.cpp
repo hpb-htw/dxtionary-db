@@ -26,12 +26,17 @@ int main(int argc, const char** argv) {
 		GZFileStreamBuffer gzBuffer(&ifs);
         istream decompressedStream(&gzBuffer);
 
+
         while(!decompressedStream.eof() && !decompressedStream.bad())
         {
             string line;
             getline(decompressedStream, line);
-            cout << '|' << line << '|' << endl;
+            cout <<  line ;
+            if (!decompressedStream.eof() ) {
+            	cout << endl;
+            }
         }
+
     }catch (...) {
         return BAD_DICTIONARY_FILE;
     }

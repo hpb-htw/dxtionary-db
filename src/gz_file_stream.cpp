@@ -8,7 +8,10 @@ using namespace std;
 
 GZFileStreamBuffer::GZFileStreamBuffer(std::istream *pIn)
 	: inStream(pIn)
+	, inflateBuffer(new char[INFLATE_BUFFER_SIZE])
+	, deflateBuffer(new char_type[static_cast<std::size_t>(BUFFER_SIZE)] )
 {
+
 	this->setg(deflateBuffer + 4, deflateBuffer + 4, deflateBuffer + 4);
 	this->setp(deflateBuffer, deflateBuffer + BUFFER_SIZE);
 
@@ -26,9 +29,6 @@ GZFileStreamBuffer::GZFileStreamBuffer(std::istream *pIn)
 	zStream.data_type = 0;
 	zStream.adler     = 0;
 	zStream.reserved  = 0;
-
-	inflateBuffer = new char[INFLATE_BUFFER_SIZE];
-	deflateBuffer = new char_type[static_cast<std::size_t>(BUFFER_SIZE)];
 
 	// document here: https://www.zlib.net/manual.html#Advanced
 	int rc = inflateInit2(&zStream, GZIP_WINDOW_BITS);
@@ -66,6 +66,7 @@ int GZFileStreamBuffer::underflow()
 	traits_type::move(deflateBuffer + (4 - putback), this->gptr() - putback, putback);
 
 	int n = readFromGzStream(deflateBuffer + 4, BUFFER_SIZE - 4);
+	cerr << n << " + ";
 	if (n <= 0) {
 		return traits_type::eof();
 	}
