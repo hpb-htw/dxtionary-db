@@ -9,30 +9,46 @@ add_library(sqlite3 STATIC
 )
 
 target_include_directories(sqlite3
-    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_compile_definitions(sqlite3
-    PRIVATE SQLITE_THREADSAFE=0
-    PRIVATE SQLITE_ENABLE_FTS4
-    PRIVATE SQLITE_ENABLE_FTS5
-    PRIVATE SQLITE_ENABLE_JSON1
-    PRIVATE SQLITE_ENABLE_RTREE
-    PRIVATE SQLITE_ENABLE_EXPLAIN_COMMENTS
-    PRIVATE SQLITE_CORE
-    PRIVATE SQLITE_EXTRA_INIT=extra_init
+    PRIVATE
+        SQLITE_THREADSAFE=0
+        SQLITE_ENABLE_FTS4
+        SQLITE_ENABLE_FTS5
+        SQLITE_ENABLE_JSON1
+        SQLITE_ENABLE_RTREE
+        SQLITE_ENABLE_EXPLAIN_COMMENTS
+        SQLITE_CORE
+        SQLITE_EXTRA_INIT=extra_init
 )
 
 target_compile_options(sqlite3
-    PRIVATE -Wall -pedantic -Os
+    PRIVATE -Os
 )
+
+function(concat sources destination)
+    message(STATUS ${destination})
+    file(WRITE ${destination} "")
+    foreach( inFile ${sources} )
+        file(READ ${inFile} temp)
+        file(APPEND ${destination} "${temp}")
+    endforeach()
+endfunction()
+
 
 set(sqlite3_dep_list ${sqlite3_dep})
 list(TRANSFORM sqlite3_dep_list PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/)
+concat("${sqlite3_dep_list}" ${SQLITE_SPELLFIX})
+
 add_custom_command(OUTPUT ${SQLITE_SPELLFIX}
     DEPENDS ${sqlite_dep}
     COMMAND
-        cat ${sqlite3_dep_list} > ${SQLITE_SPELLFIX}
+        # cat works well on almost platform, except windows :P
+        #cat ${sqlite3_dep_list} > ${SQLITE_SPELLFIX}
+        echo "nix"
 )
 
 
