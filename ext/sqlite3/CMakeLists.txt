@@ -46,13 +46,21 @@ set(sqlite3_dep_list ${sqlite3_dep})
 list(TRANSFORM sqlite3_dep_list PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/)
 #concat("${sqlite3_dep_list}" ${SQLITE_SPELLFIX})
 
-add_custom_command(OUTPUT ${SQLITE_SPELLFIX}
-    DEPENDS ${sqlite_dep}
-    COMMAND
+if(WIN32)
+    add_custom_command(OUTPUT ${SQLITE_SPELLFIX}
+        DEPENDS ${sqlite_dep}
+        COMMAND
         # cat works well on almost platform, except windows :P
-        cat ${sqlite3_dep_list} > ${SQLITE_SPELLFIX}
-)
-
+        type ${sqlite3_dep_list} > ${SQLITE_SPELLFIX}
+    )
+else()
+    add_custom_command(OUTPUT ${SQLITE_SPELLFIX}
+        DEPENDS ${sqlite_dep}
+        COMMAND
+            # cat works well on almost platform, except windows :P
+            cat ${sqlite3_dep_list} > ${SQLITE_SPELLFIX}
+    )
+endif()
 
 
 
