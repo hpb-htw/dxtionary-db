@@ -37,7 +37,7 @@ target_link_libraries(gz_stream
 )
 
 
-
+#[===[
 ## xz-stream-file-test
 add_executable(xz-stream-test
     xz_stream_test.cpp
@@ -48,6 +48,7 @@ add_executable(xz-stream-test
 target_link_libraries(xz-stream-test
     -llzma
 )
+]===]
 
 # copy script.sh to build-dir, just for test only
 add_custom_target(dummy ALL
