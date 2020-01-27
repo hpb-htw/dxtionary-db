@@ -18,8 +18,8 @@ public:
         : instream(pIn)
         , lzmaStream(LZMA_STREAM_INIT)
     {
-        compressedBuffer.reset(new char[bufferLength]);
-        decompressedBuffer.reset(new char[bufferLength]);
+        compressedBuffer.reset(new char[CHUNK_SIZE]);
+        decompressedBuffer.reset(new char[CHUNK_SIZE]);
 
         // Initially indicate that the buffer is empty
         setg(&decompressedBuffer[0], &decompressedBuffer[1], &decompressedBuffer[1]);
@@ -43,6 +43,6 @@ private:
     std::istream* instream;
     std::unique_ptr<char[]> compressedBuffer,
                             decompressedBuffer;
-    const size_t bufferLength = 10240;
+    const size_t CHUNK_SIZE = 10240;
     lzma_stream lzmaStream;
 };

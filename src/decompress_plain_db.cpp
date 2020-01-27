@@ -23,12 +23,12 @@ int main(int argc, const char** argv) {
     try {
         ifstream ifs(dicFileName, ios::in | ios::binary);
         LZMAStreamBuf lzmaBuf(&ifs);
-        istream in(&lzmaBuf);
+        istream decompressedStream(&lzmaBuf);
 
-        while(!in.eof() && !in.bad())
+        while(!decompressedStream.eof() && !decompressedStream.bad())
         {
             string sLine;
-            getline(in, sLine);
+            getline(decompressedStream, sLine);
             cout << sLine << endl;
         }
     }catch (...) {

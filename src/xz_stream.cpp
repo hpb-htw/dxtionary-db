@@ -12,19 +12,19 @@ int LZMAStreamBuf::underflow()
     lzma_ret ret = LZMA_OK;
 
     // Do nothing if data is still available (sanity check)
-    if(this->gptr() < this->egptr())
+    if(this->gptr() < this->egptr()) {
         return traits_type::to_int_type(*this->gptr());
-
+    }
     while(true)
     {
         lzmaStream.next_out =
                reinterpret_cast<unsigned char*>(decompressedBuffer.get());
-        lzmaStream.avail_out = bufferLength;
+        lzmaStream.avail_out = CHUNK_SIZE;
 
         if(lzmaStream.avail_in == 0)
         {
-            // Read from the file, maximum bufferLength bytes
-            instream->read(&compressedBuffer[0], bufferLength);
+            // Read from the file, maximum CHUNK_SIZE bytes
+            instream->read(&compressedBuffer[0], CHUNK_SIZE);
 
             // check for possible I/O error
             if(instream->bad())
@@ -47,9 +47,9 @@ int LZMAStreamBuf::underflow()
         // check for data
         // NOTE: avail_out gives that amount of data which is available for LZMA to write!
         //         NOT the size of data which has been written for us!
-        if(lzmaStream.avail_out < bufferLength)
+        if(lzmaStream.avail_out < CHUNK_SIZE)
         {
-            const size_t nDataAvailable = bufferLength - lzmaStream.avail_out;
+            const size_t nDataAvailable = CHUNK_SIZE - lzmaStream.avail_out;
 
             // Let std::streambuf know how much data is available in the buffer now
             setg(&decompressedBuffer[0], &decompressedBuffer[0],
@@ -64,7 +64,7 @@ int LZMAStreamBuf::underflow()
                 // This return code is desired if eof of the source file has been reached
                 assert(action == LZMA_FINISH);
                 assert(instream->eof());
-                assert(lzmaStream.avail_out == bufferLength);
+                assert(lzmaStream.avail_out == CHUNK_SIZE);
                 return traits_type::eof();
             }
 

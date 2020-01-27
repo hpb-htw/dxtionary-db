@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 # set the project name and version
 project(dxtionary-db VERSION 1.0.0)
 set(CMAKE_VERBOSE_MAKEFILE ON)
+configure_file(dxtionary_version.h.in dxtionary_version.h)
 
 # compile all modules with warning enable
 if(MSVC)
@@ -14,5 +15,4 @@ endif()
 
 add_subdirectory(src)
 add_subdirectory(ext/sqlite3)
-
-configure_file(dxtionary_version.h.in dxtionary_version.h)
+add_subdirectory(ext/zlib)
