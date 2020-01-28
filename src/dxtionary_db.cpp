@@ -10,12 +10,6 @@
 
 using namespace std;
 
-int sqlite3_spellfix_init(
-  sqlite3 *db,
-  char **pzErrMsg,
-  const sqlite3_api_routines *pApi
-);
-
 static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 {
 
@@ -42,7 +36,6 @@ int main(int argc, const char* argv[])
     int openDbOk = sqlite3_open(argv[1], &db);
     if (openDbOk != 0)
     {
-
         cerr << "Can't open database: " << sqlite3_errmsg(db) << endl;
         sqlite3_close(db);
         return 1;
@@ -52,7 +45,7 @@ int main(int argc, const char* argv[])
     int excuteSttmOK = sqlite3_exec(db, argv[2], callback, nullptr, &zErrMsg);
     if (excuteSttmOK != 0)
     {
-        cerr << "SQL error: " << zErrMsg << endl;
+        cerr << argv[0] << ": " << zErrMsg << endl;
         sqlite3_free(zErrMsg);
     }
     sqlite3_close(db);

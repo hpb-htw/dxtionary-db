@@ -15,14 +15,14 @@ GZFileStreamBuffer::GZFileStreamBuffer(std::istream *pIn)
 	this->setg(deflateBuffer + 4, deflateBuffer + 4, deflateBuffer + 4);
 	this->setp(deflateBuffer, deflateBuffer + BUFFER_SIZE);
 
-	zStream.next_in   = 0;
+	zStream.next_in   = nullptr;
 	zStream.avail_in  = 0;
 	zStream.total_in  = 0;
-	zStream.next_out  = 0;
+	zStream.next_out  = nullptr;
 	zStream.avail_out = 0;
 	zStream.total_out = 0;
-	zStream.msg       = 0;
-	zStream.state     = 0;
+	zStream.msg       = nullptr;
+	zStream.state     = nullptr;
 	zStream.zalloc    = Z_NULL;
 	zStream.zfree     = Z_NULL;
 	zStream.opaque    = Z_NULL;
