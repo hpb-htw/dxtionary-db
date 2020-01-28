@@ -19,10 +19,10 @@ target_link_libraries(dxtionary-db PUBLIC
 )
 
 ## decompress-plain-db
-add_executable(decompress-plain-db
-    decompress_plain_db.cpp
+add_executable(decompress-raw-dict
+    decompress_raw_dict.cpp
 )
-target_link_libraries(decompress-plain-db
+target_link_libraries(decompress-raw-dict
     PRIVATE
         gz_stream
 )
@@ -38,33 +38,6 @@ target_link_libraries(gz_stream
 target_include_directories(gz_stream
     PUBLIC
         ${PROJECT_BINARY_DIR}/../ext/zlib
-)
-
-#[===[
-## xz-stream-file-test
-add_executable(xz-stream-test
-    xz_stream_test.cpp
-    xz_stream.cpp
-    xz_stream.h
-)
-
-target_link_libraries(xz-stream-test
-    -llzma
-)
-]===]
-
-# copy script.sh to build-dir, just for test only
-add_custom_target(dummy ALL
-    COMMAND echo "dummy target to trigger copy file ${TEST_FILE}"
-    DEPENDS
-        script.sh
-    VERBATIM
-)
-add_custom_command(OUTPUT script.sh
-    COMMENT
-        "creating script.sh"
-    COMMAND
-        cp ../../script.sh ..
 )
 
 
