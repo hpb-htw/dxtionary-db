@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
 
-# set the project name and version
 project(dxtionary-db)
 # TODO: remve these two commands after test
 set(CMAKE_CXX_STANDARD 11)
@@ -19,10 +18,10 @@ target_link_libraries(dxtionary-db PUBLIC
 )
 
 ## decompress-plain-db
-add_executable(decompress-raw-dict
-    decompress_raw_dict.cpp
+add_executable(import-raw-dict
+    import_raw_dict.cpp
 )
-target_link_libraries(decompress-raw-dict
+target_link_libraries(import-raw-dict
     PRIVATE
         gz_stream
 )

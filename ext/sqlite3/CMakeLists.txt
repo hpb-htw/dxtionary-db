@@ -33,7 +33,7 @@ target_compile_options(sqlite3
 function(concat sources destination)
     file(WRITE ${destination} "")
     message(STATUS "concat")
-    foreach( inFile ${sources} )
+    foreach( inFile IN LISTS sources )
         message(STATUS "        ${inFile}")
         file(READ ${inFile} temp)
         file(APPEND ${destination} "${temp}")

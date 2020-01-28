@@ -19,4 +19,4 @@ export CXX=$(which "${platform}-g++")
 WINRES=$(which "${platform}-windres")
 
 
-cmake -S . -B cmake-build-mingw -DSKIP_INSTALL_HEADERS=False -DCMAKE_RC_COMPILER=${WINRES}
+cmake -S . -B mingw-build -DSKIP_INSTALL_HEADERS=False -DCMAKE_RC_COMPILER=${WINRES}

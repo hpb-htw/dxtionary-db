@@ -7,4 +7,4 @@
 export CC=`which clang`
 export CXX=`which clang++`
 
-cmake -S ./ -B cmake-build-clang
+cmake -S ./ -B clang-build

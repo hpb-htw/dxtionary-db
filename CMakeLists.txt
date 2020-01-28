@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 # set the project name and version
 project(dxtionary-db VERSION 1.0.0)
-set(CMAKE_VERBOSE_MAKEFILE ON)
+# set(CMAKE_VERBOSE_MAKEFILE ON)
 configure_file(dxtionary_version.h.in dxtionary_version.h)
 
 # compile all modules with warning enable
@@ -12,13 +12,21 @@ else()
     add_compile_options(-Wall -pedantic)
 endif()
 
-# this matches variables in zlib
+# this matches same variable in zlib and suppress compiler flag -rdynamic
 if(MINGW)
     # suppress option -rdynamic by cross compiling zlib
     set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
     set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
 endif()
 
+
+
+# source code
 add_subdirectory(src)
 add_subdirectory(ext/sqlite3)
-add_subdirectory(ext/zlib)
+# only build necessary CPP
+add_subdirectory(ext/zlib EXCLUDE_FROM_ALL)
+
+
+# unit-test
+add_subdirectory(test)
