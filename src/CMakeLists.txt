@@ -35,6 +35,8 @@ target_link_libraries(gz_stream
         zlibstatic
 )
 target_include_directories(gz_stream
+    INTERFACE
+        ${PROJECT_SOURCE_DIR}
     PUBLIC
         ${PROJECT_BINARY_DIR}/../ext/zlib
 )

@@ -37,6 +37,9 @@ endif()
 
 # Enable testing for the project
 enable_testing()
+include(GoogleTest)
+message(STATUS ${PROJECT_BINARY_DIR})
+configure_file(${PROJECT_SOURCE_DIR}/data.txt.gz ${PROJECT_BINARY_DIR}/data.txt.gz COPYONLY)
 
 add_executable(gz_stream_test gz_stream_test.cpp)
 target_link_libraries(gz_stream_test
@@ -44,8 +47,8 @@ target_link_libraries(gz_stream_test
         gtest_main
         gz_stream
 )
-target_include_directories(gz_stream_test
-    PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/../src
+
+gtest_discover_tests(gz_stream_test
+    TEST_LIST gz_test
 )
-add_test(NAME gz_stream_test COMMAND gz_stream_test)
+
