@@ -8,10 +8,9 @@ using namespace std;
 
 GZFileStreamBuffer::GZFileStreamBuffer(std::istream *pIn)
 	: inStream(pIn)
-	, inflateBuffer(new char[INFLATE_BUFFER_SIZE])
 	, deflateBuffer(new char_type[static_cast<std::size_t>(BUFFER_SIZE)] )
 {
-
+	inflateBuffer.reset(new char[INFLATE_BUFFER_SIZE]);
 	this->setg(deflateBuffer + 4, deflateBuffer + 4, deflateBuffer + 4);
 	this->setp(deflateBuffer, deflateBuffer + BUFFER_SIZE);
 
@@ -34,7 +33,6 @@ GZFileStreamBuffer::GZFileStreamBuffer(std::istream *pIn)
 	int rc = inflateInit2(&zStream, GZIP_WINDOW_BITS);
 	if(rc != Z_OK)
 	{
-		delete[] inflateBuffer;
 		delete[] deflateBuffer;
 		throw std::runtime_error(zError(rc));
 	}
@@ -42,7 +40,6 @@ GZFileStreamBuffer::GZFileStreamBuffer(std::istream *pIn)
 
 GZFileStreamBuffer::~GZFileStreamBuffer()
 {
-	delete [] inflateBuffer;
 	delete [] deflateBuffer;
 	inflateEnd(&zStream);
 }
@@ -87,11 +84,11 @@ int GZFileStreamBuffer::readFromGzStream(char *buffer, std::streamsize length)
 		int n = 0;
 		if (inStream->good())
 		{
-			inStream->read(inflateBuffer, INFLATE_BUFFER_SIZE);
+			inStream->read(&inflateBuffer[0], INFLATE_BUFFER_SIZE);
 			n = static_cast<int>(inStream->gcount());
+			zStream.next_in   = reinterpret_cast<unsigned  char*>(inflateBuffer.get());
+			zStream.avail_in  = n;
 		}
-		zStream.next_in   = (unsigned char*) inflateBuffer;
-		zStream.avail_in  = n;
 	}
 	zStream.next_out  = (unsigned char*) buffer;
 	zStream.avail_out = static_cast<unsigned>(length);
@@ -129,12 +126,12 @@ int GZFileStreamBuffer::readFromGzStream(char *buffer, std::streamsize length)
 			int n = 0;
 			if (inStream->good())
 			{
-				inStream->read(inflateBuffer, INFLATE_BUFFER_SIZE);
+				inStream->read(&inflateBuffer[0], INFLATE_BUFFER_SIZE);
 				n = static_cast<int>(inStream->gcount());
 			}
 			if (n > 0)
 			{
-				zStream.next_in  = (unsigned char*) inflateBuffer;
+				zStream.next_in   = reinterpret_cast<unsigned  char*>(inflateBuffer.get());
 				zStream.avail_in = n;
 			}else {
 				return static_cast<int>(length) - zStream.avail_out;

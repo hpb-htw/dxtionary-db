@@ -24,8 +24,7 @@ private:
 	z_stream zStream;
 
 	std::istream*  inStream; // gz stream source
-	char* inflateBuffer;
-	//std::unique_ptr<char[]> inflateBuffer;
+	std::unique_ptr<char[]> inflateBuffer;
 	char_type* deflateBuffer;
 	//std::unique_ptr<char_type []> deflateBuffer;
 	int readFromGzStream(char* buffer, std::streamsize length);
