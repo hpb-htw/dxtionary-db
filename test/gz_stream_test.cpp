@@ -14,8 +14,12 @@ namespace {
 			FAIL() << "Cannot open file '" << testDataPath << "' as stream. Check if file exist";
 		}
 		GZFileStreamBuffer gzBuffer(&testDataFileStream);
-		vector<string> expectedLines {
-			"line 1", "line 2", "line 3"
+		vector<string> expectedLines = {
+			"line ä Ä 1",
+			"line ö Ö 2",
+			"line ü Ü 3",
+			"line ß 4",
+			"" // the last line is an empty line!
 		};
 		istream decompressedStream(&gzBuffer);
 		size_t i = 0;
@@ -25,6 +29,8 @@ namespace {
 			getline(decompressedStream, line);
 			cout << i << ' ' << line << endl;
 			ASSERT_EQ(line, expectedLines[i++]);
+			//i = i + 1;
 		}
+		ASSERT_EQ( i , expectedLines.size() );
 	}
 }

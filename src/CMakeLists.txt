@@ -17,14 +17,16 @@ target_link_libraries(dxtionary-db PUBLIC
     sqlite3 -lm
 )
 
-## decompress-plain-db
+## import-raw-dict
 add_executable(import-raw-dict
     import_raw_dict.cpp
 )
 target_link_libraries(import-raw-dict
     PRIVATE
         gz_stream
+        dict_file_processor
 )
+### gz_stream
 add_library(gz_stream
     STATIC
         gz_stream.cpp
@@ -41,7 +43,20 @@ target_include_directories(gz_stream
         ${PROJECT_BINARY_DIR}/../ext/zlib
 )
 
-
+### dict_file_processor
+add_library(dict_file_processor
+    STATIC
+        dict_file_processor.cpp
+        dict_file_processor.hpp
+)
+target_compile_features(dict_file_processor
+    PUBLIC
+        cxx_std_17
+)
+target_link_libraries(dict_file_processor
+    PUBLIC
+        -lstdc++fs
+)
 # Simple sqlite3 compile test; run with ctest
 enable_testing()
 

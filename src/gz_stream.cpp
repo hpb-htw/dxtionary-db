@@ -8,11 +8,11 @@ using namespace std;
 
 GZFileStreamBuffer::GZFileStreamBuffer(std::istream *pIn)
 	: inStream(pIn)
-	, deflateBuffer(new char_type[static_cast<std::size_t>(BUFFER_SIZE)] )
 {
 	inflateBuffer.reset(new char[INFLATE_BUFFER_SIZE]);
-	this->setg(deflateBuffer + 4, deflateBuffer + 4, deflateBuffer + 4);
-	this->setp(deflateBuffer, deflateBuffer + BUFFER_SIZE);
+	deflateBuffer.reset(new char_type[BUFFER_SIZE]);
+	this->setg(&deflateBuffer[0] + 4, &deflateBuffer[0] + 4, &deflateBuffer[0] + 4);
+	this->setp(&deflateBuffer[0], &deflateBuffer[0] + BUFFER_SIZE);
 
 	zStream.next_in   = nullptr;
 	zStream.avail_in  = 0;
@@ -33,14 +33,12 @@ GZFileStreamBuffer::GZFileStreamBuffer(std::istream *pIn)
 	int rc = inflateInit2(&zStream, GZIP_WINDOW_BITS);
 	if(rc != Z_OK)
 	{
-		delete[] deflateBuffer;
 		throw std::runtime_error(zError(rc));
 	}
 }
 
 GZFileStreamBuffer::~GZFileStreamBuffer()
 {
-	delete [] deflateBuffer;
 	inflateEnd(&zStream);
 }
 
@@ -60,16 +58,15 @@ int GZFileStreamBuffer::underflow()
 		putback = 4;
 	}
 
-	traits_type::move(deflateBuffer + (4 - putback), this->gptr() - putback, putback);
+	traits_type::move(&deflateBuffer[0] + (4 - putback), this->gptr() - putback, putback);
 
-	int n = readFromGzStream(deflateBuffer + 4, BUFFER_SIZE - 4);
+	int n = readFromGzStream(&deflateBuffer[0] + 4, BUFFER_SIZE - 4);
 	if (n <= 0) {
 		return traits_type::eof();
 	}
 
-	this->setg(deflateBuffer + (4 - putback), deflateBuffer + 4, deflateBuffer + 4 + n);
+	this->setg(&deflateBuffer[0] + (4 - putback), &deflateBuffer[0] + 4, &deflateBuffer[0] + 4 + n);
 
-	// return next character
 	return traits_type::to_int_type(*this->gptr());
 }
 

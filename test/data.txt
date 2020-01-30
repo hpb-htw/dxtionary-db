@@ -1,3 +1,4 @@
-line 1
-line 2
-line 3
+line ä Ä 1
+line ö Ö 2
+line ü Ü 3
+line ß 4
