@@ -31,7 +31,7 @@ int main(int argc, const char** argv) {
 
 	try
 	{
-		processDictFile(dicFileName, databaseFileName);
+		//processDictFile(dicFileName, databaseFileName);
 	}catch (const BadDictFileException& ex)
 	{
     	cerr << ex.what();

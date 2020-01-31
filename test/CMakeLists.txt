@@ -48,7 +48,16 @@ target_link_libraries(gz_stream_test
         gz_stream
 )
 
-gtest_discover_tests(gz_stream_test
+add_executable(dict_file_processor_test dict_file_processor_test.cpp)
+target_link_libraries(dict_file_processor_test
+    PRIVATE
+        gtest_main
+        dict_file_processor
+)
+
+gtest_discover_tests(
+    gz_stream_test
+    dict_file_processor_test
     TEST_LIST gz_test
 )
 

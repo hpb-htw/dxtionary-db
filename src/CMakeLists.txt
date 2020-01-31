@@ -33,7 +33,7 @@ add_library(gz_stream
         gz_stream.hpp
 )
 target_link_libraries(gz_stream
-    PRIVATE
+    PUBLIC
         zlibstatic
 )
 target_include_directories(gz_stream
@@ -56,6 +56,11 @@ target_compile_features(dict_file_processor
 target_link_libraries(dict_file_processor
     PUBLIC
         -lstdc++fs
+        gz_stream
+)
+target_include_directories(dict_file_processor
+    INTERFACE
+        ${PROJECT_SOURCE_DIR}
 )
 # Simple sqlite3 compile test; run with ctest
 enable_testing()
