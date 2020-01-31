@@ -19,7 +19,7 @@ namespace _TEST_ {
 			dictionaryContent.clear();
 		}
 
-		void createTextTable(const vector<string> &columnNames_) const override {
+		void createTextTable(const vector<string> &columnNames_) override {
 			for (const string &name : columnNames_) {
 				columnNames.push_back(name);
 			}
@@ -32,6 +32,21 @@ namespace _TEST_ {
 }
 
 namespace _TEST_ {
+	TEST(dict_file_processor, trim)
+	{
+		string text = " blabla   ";
+		trim(text);
+		ASSERT_EQ(text, "blabla");
+	}
+
+	TEST(dict_file_processor, trim_empty)
+	{
+		string text = "    ";
+		trim(text);
+		ASSERT_EQ(text, "");
+		ASSERT_TRUE(text.empty());
+	}
+
 	TEST(dict_file_processor, parseTextToVector)
 	{
 		string text = "wortart::wordtrennung::bebeutung";

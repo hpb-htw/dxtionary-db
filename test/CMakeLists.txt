@@ -55,9 +55,9 @@ target_link_libraries(dict_file_processor_test
         dict_file_processor
 )
 
-gtest_discover_tests(
-    gz_stream_test
-    dict_file_processor_test
+gtest_add_tests(
+    TARGET gz_stream_test
+    TARGET dict_file_processor_test
     TEST_LIST gz_test
 )
 

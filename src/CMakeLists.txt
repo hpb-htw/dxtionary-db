@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.12)
 
 project(dxtionary-db)
 # TODO: remve these two commands after test
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # add the executable
 ## dxtionary-db

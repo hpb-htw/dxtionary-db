@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <algorithm>
+
 #include <experimental/filesystem>
 #include "dict_file_processor.hpp"
 #include "gz_stream.hpp"
@@ -14,7 +16,7 @@ bool checkFileExist(const char* path)
 	return fs::exists(path);
 }
 
-void Dxtionary::createTextTable(const vector<string> &columnNames) const
+void Dxtionary::createTextTable(const vector<string> &columnNames)
 {
 	// TODO: implement this
 }
@@ -24,16 +26,17 @@ void Dxtionary::insertText(const vector<string>& textRow)
 	// TODO: implement it
 }
 
-void Dxtionary::flush() const
+void Dxtionary::flush()
 {
 	// TODO: implement it
 }
 
-void DictFileProcessor::processDictFile(const char* dictPath, Dxtionary& dxtionary)
+void DictFileProcessor::processDictFile(const char* dictPath, Dxtionary& dxtionary) const
 {
+
 	ifstream ifs(dictPath, ios::in | ios::binary);
 	if (!ifs) {
-		throw BadDictFileException(dictPath);
+		throw DictFileNotReadable(dictPath);
 	}
 	GZFileStreamBuffer gzBuffer(&ifs);
 	istream decompressedStream(&gzBuffer);
@@ -41,13 +44,15 @@ void DictFileProcessor::processDictFile(const char* dictPath, Dxtionary& dxtiona
 	importDictionaryContent(decompressedStream, dxtionary);
 }
 
-void DictFileProcessor::importEntryField(istream& rawDictionaryDataStream,  Dxtionary& dxtionary)
+void DictFileProcessor::importEntryField(istream& rawDictionaryDataStream,  Dxtionary& dxtionary) const
 {
 	string columnDefinitionLine; // is the first line in file, which is not empty and not begins with a #-charater
 	while (!rawDictionaryDataStream.eof() && !rawDictionaryDataStream.bad())
 	{
 		getline(rawDictionaryDataStream, columnDefinitionLine);
-		if(columnDefinitionLine.size() > 0 && columnDefinitionLine[0] != LINE_COMMENT_SIGN) {
+		trim(columnDefinitionLine);
+		if( !columnDefinitionLine.empty() && columnDefinitionLine[0] != LINE_COMMENT_SIGN)
+		{
 			break;
 		}
 	}
@@ -55,51 +60,51 @@ void DictFileProcessor::importEntryField(istream& rawDictionaryDataStream,  Dxti
 	dxtionary.createTextTable(columnName);
 }
 
-void DictFileProcessor::importDictionaryContent(istream& decompressedStream, Dxtionary& dxtionary)
+void DictFileProcessor::importDictionaryContent(istream& decompressedStream, Dxtionary& dxtionary) const
 {
 	while (!decompressedStream.eof() && !decompressedStream.bad())
 	{
 		string line;
 		getline(decompressedStream, line);
-		vector<string> content = parseTextToVector(line, delimiter);
-		if(! content.empty() ) {
+		trim(line);
+		if( ! (line.empty() || line[0] == LINE_COMMENT_SIGN) )
+		{
+			vector<string> content = parseTextToVector(line, delimiter);
 			dxtionary.insertText(content);
 		}
 	}
 	dxtionary.flush();
 }
 
+// helpers
 vector<string> parseTextToVector(const string& s, const string& delimiter)
 {
 	size_t last = 0;
 	size_t next = 0;
 	vector<string> tokens;
-	if (s.empty() || s[0] == LINE_COMMENT_SIGN) {
-		return tokens;
-	}
 	while ( (next = s.find(delimiter, last)) != string::npos)
 	{
-		//cout << s.substr(last, next-last) << endl;
 		string token = s.substr(last, next-last);
 		tokens.push_back(token);
 		last = next + delimiter.size() ;
 	}
-	//cout << s.substr(last) << endl;
+
 	tokens.push_back(s.substr(last));
 	return tokens;
 }
 
 
-BadDictFileException::BadDictFileException(const char* path_)
+BadDictFileException::BadDictFileException(const char* path_, const string& info_)
 	:path(path_)
+	,info(info_)
 {
 	//NOTE on C++20
 	//std::format("Cannot read file '{}'. Check if file exists", dicFileName)
-	msg = (std::string("Cannot read file '") += path_)
-		+= "'. Check if file is empty or if file exists.";
+	msg = ((std::string("Bad file '") += path_) + "': ") + info;
 }
 
-const char* BadDictFileException::what() const  throw ()
+const char* BadDictFileException::what() const  noexcept
 {
 	return msg.c_str();
 }
+

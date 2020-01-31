@@ -2,7 +2,7 @@
 
 # NOTE: not work at all, see later if have time
 
-platform="i686-w64-mingw32"
+#platform="i686-w64-mingw32"
 # alternatives:
 # x86_64-w64-mingw32
 # i686-w64-mingw32
@@ -10,13 +10,16 @@ platform="i686-w64-mingw32"
 # x86_64-w64-mingw32
 
 # C
-export CC=$(which "${platform}-gcc")
+#export CC=$(which "${platform}-gcc")
 
 # C++
-export CXX=$(which "${platform}-g++")
+#export CXX=$(which "${platform}-g++")
 
 # setup windres
-WINRES=$(which "${platform}-windres")
+#WINRES=$(which "${platform}-windres")
 
 
-cmake -S . -B mingw-build -DSKIP_INSTALL_HEADERS=False -DCMAKE_RC_COMPILER=${WINRES}
+#cmake -S . -B mingw-build -DSKIP_INSTALL_HEADERS=False -DCMAKE_RC_COMPILER=${WINRES}
+
+cmake -S . -B mingw-build -DCMAKE_TOOLCHAIN_FILE=mingw-toolchain.cmake
+

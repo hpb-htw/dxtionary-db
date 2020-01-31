@@ -1,6 +1,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -24,7 +25,7 @@ public:
 	/**
 	 * create a table with given name and given column names. All columns have data-type TEXT.
 	 * */
-	virtual void createTextTable(const vector<string>& columnNames) const;
+	virtual void createTextTable(const vector<string>& columnNames) ;
 	/**
 	 * insert text to a table, client must ensure that each text field must be a single line. Newlines
 	 * must be escaped before, sothat he can parse result from member function (so und so) of this
@@ -35,7 +36,7 @@ public:
 
 	/** insert text in cache immediately to database. Cache is then empty. Client of this class
 	 * *must* call this method to ensure that all rows are inserted into database. */
-	virtual void flush() const;
+	virtual void flush();
 
 private:
 	string dbPath;
@@ -52,7 +53,7 @@ public:
 	 * {@param dict}
 	 * may throw {@class BadDictFileException} if dictionary is not readable.
 	 * */
-	void processDictFile(const char *dictPath, Dxtionary &dict);
+	void processDictFile(const char *dictPath, Dxtionary &dict) const;
 
 	/**
 	 * read {@param rawDictionaryDataStream} line-by-line to reach the first non-empty line,
@@ -64,28 +65,65 @@ public:
 	 * @param dxtionary
 	 *
 	 * */
-	void importEntryField(istream &rawDictionaryDataStream, Dxtionary &dxtionary);
+	void importEntryField(istream &rawDictionaryDataStream, Dxtionary &dxtionary) const;
 
 	/**
 	 * read {@param decompressedStream} line-by-line, each line is an entry to be
 	 * imported to {@param dxtionary}
 	 *
 	 * */
-	void importDictionaryContent(istream &decompressedStream, Dxtionary &dxtionary);
+	void importDictionaryContent(istream &decompressedStream, Dxtionary &dxtionary) const;
 
 private:
 	string delimiter;
 };
 
 vector<string> parseTextToVector(const string& text, const string& delimiter);
+// trim from start (in place)
+static inline void ltrim(std::string &s)
+{
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+		return !std::isspace(ch);
+	}));
+}
+
+// trim from end (in place)
+static inline void rtrim(std::string &s)
+{
+	s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+		return !std::isspace(ch);
+	}).base(), s.end());
+}
+
+// trim from both ends (in place)
+static inline void trim(std::string &s)
+{
+	ltrim(s);
+	rtrim(s);
+}
 
 /** represents a bad raw dictionary file */
 class BadDictFileException: public exception
 {
 public:
-	explicit BadDictFileException(const char* path_);
-	const char * what() const  throw ();
+	explicit BadDictFileException(const char* path_, const string& info_="");
+	const char * what() const  noexcept ;
 private:
 	const char* path;
+	string info;
 	string msg;
+};
+
+class DictFileNotExist : public BadDictFileException {
+public:
+	explicit DictFileNotExist(const char* path_)
+		:BadDictFileException(path_, "File not exits")
+	{}
+};
+
+class DictFileNotReadable : public BadDictFileException {
+public:
+	explicit DictFileNotReadable(const char* path_)
+		:BadDictFileException(path_, "File not readable, or empty")
+	{}
 };

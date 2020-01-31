@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.12)
 project(dxtionary-db VERSION 1.0.0)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 configure_file(dxtionary_version.h.in dxtionary_version.h)
+message(STATUS use toolchain file ${CMAKE_TOOLCHAIN_FILE})
 
 # compile all modules with warning enable
 if(MSVC)
