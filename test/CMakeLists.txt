@@ -36,8 +36,6 @@ endif()
 
 
 
-
-
 # Enable testing for the project
 enable_testing()
 include(GoogleTest)
@@ -51,12 +49,9 @@ target_link_libraries(gz_stream_test
         gtest_main
         gz_stream
 )
-
 gtest_add_tests(
     TARGET gz_stream_test
-    TEST_LIST gz_test
 )
-
 ## dict_file_processor_test
 add_executable(dict_file_processor_test dict_file_processor_test.cpp)
 target_link_libraries(dict_file_processor_test
@@ -66,25 +61,35 @@ target_link_libraries(dict_file_processor_test
 )
 gtest_add_tests(
     TARGET dict_file_processor_test
-    TEST_LIST gz_test
 )
 
+## Run all unit-test after build
+add_custom_target(
+    run_test ALL
+    DEPENDS
+        gz_stream_test
+        dict_file_processor_test
+)
+## call ctest to run all unit test
+add_custom_command(TARGET run_test
+    POST_BUILD
+    COMMAND ctest --output-on-failure
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)
 
 
 # Code coverage configuration only for g++ compiler
 if(CMAKE_COMPILER_IS_GNUCXX)
-    ## dummy target to hook Post build
-    add_custom_target(
-        run_test ALL
-        DEPENDS
-            gz_stream_test
-            dict_file_processor_test
-    )
-    ## call ctest to run all unit test
-    add_custom_command(TARGET run_test
-        POST_BUILD
-        COMMAND ctest --output-on-failure
-        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    )
     ## TODO: call gcov to make coverage report
 endif()
+
+# Code coverage configuration only for clang++ compiler with llvm installed
+# This code works, but there is too much manual maintaining work.
+if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+    if("${CMAKE_C_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang" OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
+        message(STATUS "use clang coverage tool")
+        llvm_cover(gz_stream_test ../../src/gz_stream.cpp )
+        llvm_cover(dict_file_processor_test ../../src/dict_file_processor.cpp )
+    endif()
+endif()
+
