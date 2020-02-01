@@ -11,7 +11,7 @@ int main(int argc, const char** argv) {
 	const int BAD_DICTIONARY_FILE = 2;
 	const int BAD_DATABASE_FILE = 3;
 
-	if (argc <= 3) {
+	if (argc < 3) {
 		cerr << "Error: experted Dictionary file and databse file."
 			 << endl;
 		cout << argv[0] << " <Database file> <Dictionary file>+"
@@ -19,10 +19,7 @@ int main(int argc, const char** argv) {
 		return BAD_ARGUMENT;
 	}
 	const char* databaseFileName  = argv[1];
-	if( !checkFileExist(databaseFileName) )
-	{
-		return BAD_DATABASE_FILE ;
-	}
+
 	for(int i = 2; i < argc; ++i)
 	{
 		const char *dicFileName = argv[i];
@@ -33,7 +30,7 @@ int main(int argc, const char** argv) {
 				throw DictFileNotExist(dicFileName);
 			}
 			DictFileProcessor p;
-			Dxtionary d(databaseFileName, "dummy");
+			Dxtionary d(databaseFileName, "dummy", 1024);
 			p.processDictFile(dicFileName, d);
 		} catch (const BadDictFileException &ex)
 		{

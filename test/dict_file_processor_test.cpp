@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
-
+#include <cstdio>
+#include <tuple>
 #include "gtest/gtest.h"
 #include "dict_file_processor.hpp"
 
@@ -9,7 +10,8 @@ using namespace std;
 namespace _TEST_ {
 	vector<string> columnNames;
 	vector<vector<string>> dictionaryContent;
-
+	string sqlCreateTable ;
+	string sqlInsertInto ;
 	class DummyDxtionaryDb : public Dxtionary {
 	public:
 		DummyDxtionaryDb(const char *dbPath, const string &tableName)
@@ -28,6 +30,54 @@ namespace _TEST_ {
 		void insertText(const vector<string> &textRow) override {
 			dictionaryContent.push_back(textRow);
 		}
+	};
+
+	class TextualDxtionaryDb : public Dxtionary {
+	public:
+		TextualDxtionaryDb(const char *dbPath, const string &tableName)
+			: Dxtionary(dbPath, tableName)
+		{/*Nothing*/}
+
+		void createTextTable(const vector<string> &columnNames_) override
+		{
+			tuple<string,string> cmd = buildCreateTableStatement(columnNames_);
+			sqlCreateTable = std::get<0>(cmd);
+			sqlInsertInto =  std::get<1>(cmd);
+		}
+
+		void insertText(const vector<string> &textRow) override
+		{
+
+		}
+	};
+	static const char* dbPath = "dictionray-db.sqlite";
+	static const char* dictionaryTableName = "wiktionary";
+
+	class DbTestFixture: public ::testing::Test {
+	public:
+		DbTestFixture( ) {
+			// initialization code here
+		}
+
+		void SetUp( ) {
+			// code here will execute just before the test ensues
+			int rc = std::remove(dbPath);
+			if(rc != 0)
+			{
+				cout << "Info: remove returned " << rc;
+			}
+		}
+
+		void TearDown( ) {
+			// code here will be called just after the test completes
+			// ok to through exceptions from here if need be
+		}
+
+		~DbTestFixture( )  {
+			// cleanup any pending stuff, but no exceptions allowed
+		}
+
+
 	};
 }
 
@@ -101,4 +151,85 @@ bla;bla;bla
 		};
 		ASSERT_EQ(dictionaryContent, expected);
 	}
+
+	TEST(dict_file_processor_Dxtionary, buildCreateTableStatement)
+	{
+		TextualDxtionaryDb db ("nix", "nix");
+		vector<string> columns = {
+			"col_1", "col_2", "col_3"
+		};
+		db.createTextTable(columns);
+		string expectedCreateTableCmd = "CREATE TABLE nix(col_1 TEXT, col_2 TEXT, col_3 TEXT);";
+		ASSERT_EQ(sqlCreateTable, expectedCreateTableCmd);
+		string expectedSqlInsert = "INSERT INTO nix(col_1, col_2, col_3) VALUES (?, ?, ?);";
+		ASSERT_EQ(sqlInsertInto, expectedSqlInsert);
+	}
+
+	TEST_F(DbTestFixture, dict_file_processor_Dxtionary_createTextTable)
+	{
+		Dxtionary db(dbPath, dictionaryTableName);
+		vector<string> columns = {
+			"col_1", "col_2", "col_3"
+		};
+		ASSERT_NO_THROW(
+			db.createTextTable(columns)
+		);
+		// now create a new table with the same name => expected an exception
+		ASSERT_THROW(
+			db.createTextTable(columns),
+			DatabaseError
+		);
+	}
+
+
+	TEST_F(DbTestFixture, dict_file_processor_Dxtionary_insertText)
+	{
+		Dxtionary db(dbPath, dictionaryTableName, 4);
+		vector<string> columns = {
+			"col_1", "col_2", "col_3"
+		};
+		ASSERT_NO_THROW(
+			db.createTextTable(columns)
+		);
+		vector<vector<string>> data = {
+			{"data 1 1", "data 1 2", "data 1 3"},
+			{"data 2 3", "data 2 2", "data 2 3"},
+			{"data 3 1", "data 3 2", "data 3 3"},
+			{"data 4 1", "data 4 2", "data 4 3"},
+			{"data 5 1", "data 5 2", "data 5 3"},
+		};
+		for(vector<string>& d : data)
+		{
+			ASSERT_NO_THROW( db.insertText(d) );
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

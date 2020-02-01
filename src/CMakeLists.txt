@@ -14,7 +14,8 @@ target_include_directories(dxtionary-db PUBLIC
     "${PROJECT_BINARY_DIR}"
 )
 target_link_libraries(dxtionary-db PUBLIC
-    sqlite3 -lm
+    PRIVATE
+        sqlite3 -lm
 )
 
 ## import-raw-dict
@@ -57,10 +58,12 @@ target_link_libraries(dict_file_processor
     PUBLIC
         -lstdc++fs
         gz_stream
+        sqlite3 -lm
 )
 target_include_directories(dict_file_processor
     INTERFACE
         ${PROJECT_SOURCE_DIR}
+        ${PROJECT_BINARY_DIR}
 )
 # Simple sqlite3 compile test; run with ctest
 enable_testing()

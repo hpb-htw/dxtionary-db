@@ -6,6 +6,8 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 configure_file(dxtionary_version.h.in dxtionary_version.h)
 message(STATUS use toolchain file ${CMAKE_TOOLCHAIN_FILE})
 
+configure_file(gen-big-raw-data.py gen-big-raw-data.py COPYONLY)
+
 # compile all modules with warning enable
 if(MSVC)
     add_compile_options(/W3 /WX)

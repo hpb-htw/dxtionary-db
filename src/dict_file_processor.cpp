@@ -1,7 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <tuple>
 #include <algorithm>
+
+
+#include <sqlite3.h>
 
 #include <experimental/filesystem>
 #include "dict_file_processor.hpp"
@@ -18,18 +22,160 @@ bool checkFileExist(const char* path)
 
 void Dxtionary::createTextTable(const vector<string> &columnNames)
 {
-	// TODO: implement this
+	tuple<string,string> cmd = buildCreateTableStatement(columnNames);
+	this->insertValueCmd = std::get<1>(cmd);
+
+	executeSqlNoOp(std::get<0>(cmd));
 }
 
 void Dxtionary::insertText(const vector<string>& textRow)
 {
-	// TODO: implement it
+	cache.push_back(textRow);
+
+	if (cache.size() == maximumCache)
+	{
+		flush();
+	}
+}
+
+Dxtionary::~Dxtionary()
+{
+	if( !cache.empty() )
+	{
+		flush();
+	}
+	sqlite3* mDb;
+	int openDbOk = sqlite3_open(this->dbPath.c_str(), &mDb);
+	if (openDbOk != 0)
+	{
+		handleSqliteError(mDb, "Cannot open database");
+	}
+	char* errorMessage;
+	string vacuumSttm = "VACUUM ";
+	int vaccumRc = sqlite3_exec(mDb, vacuumSttm.c_str(), nullptr, nullptr, &errorMessage);
+	if (vaccumRc != SQLITE_OK )
+	{
+		cerr << errorMessage;
+		handleSqliteError(mDb, "Cannot do vacuum");
+	}
 }
 
 void Dxtionary::flush()
 {
-	// TODO: implement it
+	/* optimize parameters */
+	// PRAGMA cache_size = 400000;
+	// PRAGMA synchronous = OFF;
+	// PRAGMA journal_mode = OFF;
+	// PRAGMA locking_mode = EXCLUSIVE;
+	// PRAGMA count_changes = OFF;
+	// PRAGMA temp_store = MEMORY;
+	// PRAGMA auto_vacuum = NONE;
+	sqlite3* mDb;
+	int openDbOk = sqlite3_open(this->dbPath.c_str(), &mDb);
+	if (openDbOk != 0)
+	{
+		handleSqliteError(mDb, "Cannot open database");
+	}
+	char* errorMessage;
+	sqlite3_exec(mDb, "PRAGMA auto_vacuum = FULL;BEGIN TRANSACTION", nullptr, nullptr, &errorMessage);
+
+	const char* zSql = insertValueCmd.c_str();
+	const int zSqlSize = insertValueCmd.size() + 1;
+	sqlite3_stmt* stmt;
+	int rc = sqlite3_prepare_v2(mDb, zSql, zSqlSize, &stmt, nullptr);
+	if (rc != SQLITE_OK)
+	{
+		handleSqliteError(mDb, "Cannot prepare statement.");
+	}
+	const size_t cacheSize = cache.size();
+	for (size_t i = 0; i < cacheSize; ++i)
+	{
+		vector<string> data = cache[i];
+		for(size_t arg = 0; arg < data.size(); ++arg)
+		{
+			string dataValue = data[arg];
+			const char* columnValue = dataValue.c_str();
+			const int columnSize = dataValue.size() + 1;
+			int bindRc = sqlite3_bind_text(stmt, arg+1, columnValue, columnSize, SQLITE_TRANSIENT);
+			if(bindRc != SQLITE_OK)
+			{
+				handleSqliteError(mDb, "Cannot bind value to Sql sttm");
+			}
+		}
+
+		if (sqlite3_step(stmt) != SQLITE_DONE)
+		{
+			handleSqliteError(mDb,  "Cannot execute Sql sttm");
+		}
+		sqlite3_reset(stmt);
+	}
+	int commitRc = sqlite3_exec(mDb, "COMMIT TRANSACTION", nullptr, nullptr, &errorMessage);
+	if (commitRc != SQLITE_OK )
+	{
+		cerr << errorMessage;
+		handleSqliteError(mDb, "Cannot commit transaction");
+	}
+	sqlite3_finalize(stmt);
+	cache.clear();
+
 }
+
+void Dxtionary::executeSqlNoOp(const string& sqlCmd)
+{
+	sqlite3* db;
+	int openDbOk = sqlite3_open(this->dbPath.c_str(), &db);
+	if (openDbOk != 0)
+	{
+		const char* sqliteError = sqlite3_errmsg(db);
+		sqlite3_close(db);
+		throw DatabaseError(sqliteError, "Cannot open database");
+	}
+	char *zErrMsg = nullptr;
+	string errorMsg;
+	int excuteSttmOK = sqlite3_exec(db, sqlCmd.c_str(), noop, nullptr, &zErrMsg);
+	if (excuteSttmOK != 0)
+	{
+		errorMsg = zErrMsg;
+		sqlite3_free(zErrMsg);
+	}
+	sqlite3_close(db);
+	if(excuteSttmOK != 0)
+	{
+		throw DatabaseError(errorMsg, __func__);
+	}
+}
+
+tuple<string,string> Dxtionary::buildCreateTableStatement(const vector<string>& columnNames) const
+{
+	string createTableCmd = "CREATE TABLE ";
+	createTableCmd += (this->tableName + "(") ;
+	// prepare for insert
+	string insertValueCmd = "INSERT INTO ";
+	insertValueCmd += (this->tableName + "(");
+	string valueClause = " VALUES (";
+
+	const size_t lastIdx = columnNames.size() - 1;
+	for(size_t i = 0; i < columnNames.size(); ++i )
+	{
+		string col = columnNames[i];
+		//TODO: check if col is a valid column name
+		//this->columns.push_back(col);
+		(createTableCmd += col) += " TEXT";
+		insertValueCmd += col;
+		valueClause += "?";
+		if (i < lastIdx )
+		{
+			createTableCmd += ", ";
+			insertValueCmd += ", ";
+			valueClause += ", ";
+		}
+	}
+	createTableCmd += ");";
+	insertValueCmd += (")" + valueClause + ");");
+	return std::make_tuple(createTableCmd, insertValueCmd);
+}
+
+
 
 void DictFileProcessor::processDictFile(const char* dictPath, Dxtionary& dxtionary) const
 {

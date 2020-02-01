@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <sqlite3.h>
 
 using namespace std;
 
@@ -18,9 +19,11 @@ bool checkFileExist(const char* path) ;
 class Dxtionary
 {
 public:
-	explicit Dxtionary(const char* dbPath_, const string& tableName_)
+	explicit Dxtionary(const char* dbPath_, const string& tableName_, size_t maxCache=1024)
 		:dbPath(dbPath_)
 		,tableName(tableName_)
+		,cache()
+		,maximumCache(maxCache)
 	{ /*Nothing to write*/ }
 	/**
 	 * create a table with given name and given column names. All columns have data-type TEXT.
@@ -37,10 +40,19 @@ public:
 	/** insert text in cache immediately to database. Cache is then empty. Client of this class
 	 * *must* call this method to ensure that all rows are inserted into database. */
 	virtual void flush();
+	~Dxtionary();
+
+protected:
+	tuple<string,string> buildCreateTableStatement(const vector<string>& columnNames) const;
 
 private:
 	string dbPath;
 	string tableName;
+	string insertValueCmd;
+	vector<vector<string>> cache;
+	size_t maximumCache = 5;
+	static int noop(void *NotUsed, int argc, char **argv, char **azColName) {return 0;}
+	void executeSqlNoOp(const string& sqlCmd);
 };
 
 class DictFileProcessor {
@@ -127,3 +139,29 @@ public:
 		:BadDictFileException(path_, "File not readable, or empty")
 	{}
 };
+
+class DatabaseError: public exception {
+public:
+	explicit DatabaseError(const char* originError, const char* extraInfo = "")
+		:msg(originError)
+		,extraInfo(extraInfo)
+	{ }
+	explicit DatabaseError(const string& originError, const char* extraInfo = "")
+		:msg(originError)
+		,extraInfo(extraInfo)
+	{ }
+	const char* what() const noexcept
+	{
+		return (msg + extraInfo + " ").c_str();
+	}
+private:
+	string msg;
+	string extraInfo;
+};
+
+static inline void handleSqliteError(sqlite3* db, const char* extraInfo)
+{
+	const char* errorMsg = sqlite3_errmsg(db);
+	sqlite3_close(db); // force close db, don't care about return value
+	throw DatabaseError(errorMsg, extraInfo);
+}
