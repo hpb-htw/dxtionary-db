@@ -27,7 +27,5 @@ add_subdirectory(ext/sqlite3)
 add_subdirectory(ext/zlib EXCLUDE_FROM_ALL)
 
 # Unit-test
-
-
-## add unit-test code
 add_subdirectory(test)
+
