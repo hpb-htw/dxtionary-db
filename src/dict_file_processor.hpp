@@ -1,7 +1,9 @@
 #include <stdexcept>
 #include <string>
+#include <cstring>
 #include <vector>
 #include <algorithm>
+#include <iostream>
 #include <sqlite3.h>
 
 using namespace std;
@@ -51,8 +53,9 @@ private:
 	string insertValueCmd;
 	vector<vector<string>> cache;
 	size_t maximumCache = 5;
+	size_t lineCount = 0;
 	static int noop(void *NotUsed, int argc, char **argv, char **azColName) {return 0;}
-	void executeSqlNoOp(const string& sqlCmd);
+	inline void executeSqlNoOp(const string& sqlCmd);
 };
 
 class DictFileProcessor {
@@ -90,7 +93,14 @@ private:
 	string delimiter;
 };
 
+/**
+ * */
 vector<string> parseTextToVector(const string& text, const string& delimiter);
+string dictFileNameToSqlTableName(const string& fileName);
+static inline void printLineCount(size_t lineNumber)
+{
+	std::cout << lineNumber << endl;
+}
 // trim from start (in place)
 static inline void ltrim(std::string &s)
 {
@@ -146,15 +156,23 @@ public:
 		:msg(originError)
 		,extraInfo(extraInfo)
 	{ }
-	explicit DatabaseError(const string& originError, const char* extraInfo = "")
+	explicit DatabaseError(const string& originError, const string& extraInfo_ = "")
 		:msg(originError)
-		,extraInfo(extraInfo)
+		,extraInfo(extraInfo_)
 	{
-		_what = const_cast<char *>((msg + extraInfo + " ").c_str());
+		string allInfo = msg + string(" ") + extraInfo;
+		size_t size = allInfo.size() + 1;
+		_what = new char [size];
+		std::strncpy(_what, allInfo.c_str(), size);
 	}
+
 	const char* what() const noexcept
 	{
 		return _what;
+	}
+	~DatabaseError()
+	{
+		delete[] _what;
 	}
 private:
 	string msg;

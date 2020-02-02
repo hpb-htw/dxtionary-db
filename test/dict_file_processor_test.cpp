@@ -107,6 +107,38 @@ namespace _TEST_ {
 		ASSERT_EQ(parsedColumns, expectedColumns);
 	}
 
+	TEST(dict_file_processor, dictFileNameToSqlTableName_relative)
+	{
+		string fileName = "../big-file/dewiktionary.csv.gz";
+		string tableName = dictFileNameToSqlTableName(fileName);
+		string expected = "dewiktionary";
+		ASSERT_EQ(tableName, expected);
+	}
+
+	TEST(dict_file_processor, dictFileNameToSqlTableName_absolute)
+	{
+		string fileName = "/home/user/big-file/dewiktionary.csv.gz";
+		string tableName = dictFileNameToSqlTableName(fileName);
+		string expected = "dewiktionary";
+		ASSERT_EQ(tableName, expected);
+	}
+
+	TEST(dict_file_processor, dictFileNameToSqlTableName_no_extension)
+	{
+		string fileName = "/home/user/big-file/dewiktionary";
+		string tableName = dictFileNameToSqlTableName(fileName);
+		string expected = "dewiktionary";
+		ASSERT_EQ(tableName, expected);
+	}
+
+	TEST(dict_file_processor, dictFileNameToSqlTableName_replaceSpaces)
+	{
+		string fileName = "/home/user/big-file/de wiktionary";
+		string tableName = dictFileNameToSqlTableName(fileName);
+		string expected = "de_wiktionary";
+		ASSERT_EQ(tableName, expected);
+	}
+
 	TEST(dict_file_processor, importEntryField)
 	{
 		string fiels = R"str(

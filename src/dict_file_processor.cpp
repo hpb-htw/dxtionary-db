@@ -31,7 +31,6 @@ void Dxtionary::createTextTable(const vector<string> &columnNames)
 void Dxtionary::insertText(const vector<string>& textRow)
 {
 	cache.push_back(textRow);
-
 	if (cache.size() == maximumCache)
 	{
 		flush();
@@ -43,20 +42,6 @@ Dxtionary::~Dxtionary()
 	if( !cache.empty() )
 	{
 		flush();
-	}
-	sqlite3* mDb;
-	int openDbOk = sqlite3_open(this->dbPath.c_str(), &mDb);
-	if (openDbOk != 0)
-	{
-		handleSqliteError(mDb, "Cannot open database");
-	}
-	char* errorMessage;
-	string vacuumSttm = "VACUUM ";
-	int vaccumRc = sqlite3_exec(mDb, vacuumSttm.c_str(), nullptr, nullptr, &errorMessage);
-	if (vaccumRc != SQLITE_OK )
-	{
-		cerr << errorMessage;
-		handleSqliteError(mDb, "Cannot do vacuum");
 	}
 }
 
@@ -117,7 +102,8 @@ void Dxtionary::flush()
 	}
 	sqlite3_finalize(stmt);
 	cache.clear();
-
+	lineCount += cacheSize;
+	printLineCount(lineCount);
 }
 
 void Dxtionary::executeSqlNoOp(const string& sqlCmd)
@@ -141,7 +127,7 @@ void Dxtionary::executeSqlNoOp(const string& sqlCmd)
 	sqlite3_close(db);
 	if(excuteSttmOK != 0)
 	{
-		throw DatabaseError(errorMsg, __func__);
+		throw DatabaseError(errorMsg, sqlCmd);
 	}
 }
 
@@ -208,6 +194,7 @@ void DictFileProcessor::importEntryField(istream& rawDictionaryDataStream,  Dxti
 
 void DictFileProcessor::importDictionaryContent(istream& decompressedStream, Dxtionary& dxtionary) const
 {
+
 	while (!decompressedStream.eof() && !decompressedStream.bad())
 	{
 		string line;
@@ -239,6 +226,21 @@ vector<string> parseTextToVector(const string& s, const string& delimiter)
 	return tokens;
 }
 
+string dictFileNameToSqlTableName(const string& fileName)
+{
+	fs::path p = fileName;
+	string fn = p.filename();
+	size_t firstPointPos = fn.find(".");
+	if(firstPointPos != string::npos) // trim last
+	{
+		size_t lastIdx = fn.size();
+		fn.erase(firstPointPos, lastIdx);
+	}
+	std::transform(fn.begin(), fn.end(), fn.begin(), [](char ch) {
+		return isspace(ch) ? '_' : ch;
+	});
+	return fn;
+}
 
 BadDictFileException::BadDictFileException(const char* path_, const string& info_)
 	:path(path_)
