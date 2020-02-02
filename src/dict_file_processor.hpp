@@ -149,14 +149,17 @@ public:
 	explicit DatabaseError(const string& originError, const char* extraInfo = "")
 		:msg(originError)
 		,extraInfo(extraInfo)
-	{ }
+	{
+		_what = const_cast<char *>((msg + extraInfo + " ").c_str());
+	}
 	const char* what() const noexcept
 	{
-		return (msg + extraInfo + " ").c_str();
+		return _what;
 	}
 private:
 	string msg;
 	string extraInfo;
+	char* _what;
 };
 
 static inline void handleSqliteError(sqlite3* db, const char* extraInfo)

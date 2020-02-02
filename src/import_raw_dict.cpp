@@ -19,7 +19,9 @@ int main(int argc, const char** argv) {
 		return BAD_ARGUMENT;
 	}
 	const char* databaseFileName  = argv[1];
+	// change this if raw CSV change, or better: re-implement main() to parse argument
 
+	const string delimiter = "<separator>";
 	for(int i = 2; i < argc; ++i)
 	{
 		const char *dicFileName = argv[i];
@@ -29,7 +31,7 @@ int main(int argc, const char** argv) {
 			{
 				throw DictFileNotExist(dicFileName);
 			}
-			DictFileProcessor p;
+			DictFileProcessor p(delimiter);
 			Dxtionary d(databaseFileName, "dummy", 1024);
 			p.processDictFile(dicFileName, d);
 		} catch (const BadDictFileException &ex)
