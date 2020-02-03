@@ -84,12 +84,13 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 # Code coverage configuration only for clang++ compiler with llvm installed
-# This code works, but there is too much manual maintaining work.
+# This code works, but there is too much manual maintaining step.
 if(CMAKE_BUILD_TYPE MATCHES DEBUG)
     if("${CMAKE_C_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang" OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
         message(STATUS "use clang coverage tool")
-        llvm_cover(gz_stream_test ../../src/gz_stream.cpp )
-        llvm_cover(dict_file_processor_test ../../src/dict_file_processor.cpp )
+        llvm_cover(gz_stream_test ../../src/gz_stream.cpp ../../src/gz_stream.hpp)
+        llvm_cover(dict_file_processor_test ../../src/dict_file_processor.cpp ../../src/dict_file_processor.hpp)
+        llvm_cover_report_all()
     endif()
 endif()
 

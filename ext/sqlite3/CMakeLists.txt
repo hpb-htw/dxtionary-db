@@ -21,6 +21,7 @@ target_compile_definitions(sqlite3
         SQLITE_ENABLE_JSON1
         SQLITE_ENABLE_RTREE
         SQLITE_ENABLE_EXPLAIN_COMMENTS
+        SQLITE_SOUNDEX
         SQLITE_OMIT_LOAD_EXTENSION
         SQLITE_CORE
         SQLITE_EXTRA_INIT=extra_init

@@ -14,7 +14,9 @@ if(CMAKE_BUILD_TYPE MATCHES DEBUG)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_COMPILER_FLAGS}")
 endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
 
-
+set(PROF_RAW "") # empty list
+set(TEST_BIN "") # empty list
+set(TEST_SRC "") # empty list
 
 function(llvm_cover TARGET_NAME)
     add_custom_target(${TARGET_NAME}-ccov-preprocessing
@@ -41,4 +43,26 @@ function(llvm_cover TARGET_NAME)
         DEPENDS ${TARGET_NAME}-ccov-preprocessing
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
+    # append new bin file to TEST_BIN
+    set(LOCAL_BIN ${TEST_BIN})
+    set(TEST_BIN ${LOCAL_BIN} ${TARGET_NAME} PARENT_SCOPE)
+    # append new profraw to PROF_RAW
+    set(LOCAL_LIST ${PROF_RAW})
+    set(PROF_RAW ${LOCAL_LIST} ${TARGET_NAME}.profdata PARENT_SCOPE)
+    # append new source file to TEST_SRC
+    set(TEST_SRC ${TEST_SRC} ${ARGN} PARENT_SCOPE)
+endfunction()
+
+function(llvm_cover_report_all)
+    message(STATUS "PRO_RAW ${PROF_RAW}")
+    message(STATUS "TEST_BIN ${TEST_BIN}")
+    message(STATUS "TEST_SRC ${TEST_SRC}")
+    add_custom_target(llvm_cover_report_all
+        COMMAND llvm-profdata merge -sparse ${PROF_RAW} -o llvm_cover_report_all.profdata
+        COMMAND llvm-cov report ${TEST_BIN} -instr-profile=llvm_cover_report_all.profdata
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+    foreach(profraw IN LISTS TEST_BIN)
+        add_dependencies(llvm_cover_report_all ${profraw}-ccov-preprocessing)
+    endforeach()
 endfunction()
