@@ -3,9 +3,25 @@ cmake_minimum_required(VERSION 3.12)
 set(SQLITE_SPELLFIX "${CMAKE_CURRENT_BINARY_DIR}/sqlite3_spellfix.c")
 set(sqlite3_dep sqlite3.c spellfix.c extra_init.c.in)
 
-add_library(sqlite3 STATIC
-    ${SQLITE_SPELLFIX}
-    sqlite3.h
+
+add_executable(sqlite3-ext
+    shell.c
+)
+
+target_link_libraries(sqlite3-ext
+    PUBLIC
+        sqlite3 -lm
+)
+
+target_include_directories(dxtionary_bind
+    INTERFACE
+    ${PROJECT_SOURCE_DIR}
+)
+
+add_library(sqlite3
+    STATIC
+        ${SQLITE_SPELLFIX}
+        sqlite3.h
 )
 
 target_include_directories(sqlite3
@@ -14,7 +30,7 @@ target_include_directories(sqlite3
 )
 # S. also https://www.sqlite.org/compile.html
 target_compile_definitions(sqlite3
-    PRIVATE
+    PUBLIC
         SQLITE_THREADSAFE=0
         SQLITE_ENABLE_FTS4
         SQLITE_ENABLE_FTS5

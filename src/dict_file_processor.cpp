@@ -133,8 +133,8 @@ void Dxtionary::executeSqlNoOp(const string& sqlCmd)
 
 tuple<string,string> Dxtionary::buildCreateTableStatement(const vector<string>& columnNames) const
 {
-	string createTableCmd = "CREATE TABLE ";
-	createTableCmd += (this->tableName + "(") ;
+	string createTableCmd = "CREATE VIRTUAL TABLE ";
+	createTableCmd += (this->tableName + " USING fts5 (") ;
 	// prepare for insert
 	string insertValueCmd = "INSERT INTO ";
 	insertValueCmd += (this->tableName + "(");
@@ -146,7 +146,7 @@ tuple<string,string> Dxtionary::buildCreateTableStatement(const vector<string>& 
 		string col = columnNames[i];
 		//TODO: check if col is a valid column name
 		//this->columns.push_back(col);
-		(createTableCmd += col) += " TEXT";
+		createTableCmd += col /*) += " TEXT"*/;
 		insertValueCmd += col;
 		valueClause += "?";
 		if (i < lastIdx )

@@ -2,7 +2,7 @@
 #include <sqlite3.h>
 #include "dxtionary_bind.h"
 
-int executeSqlQuery(const char* clientName, const char* filename, const char* sql, sqlite3CallbackFn cb, std::ostream& err)
+int executeSqlQuery(const char* filename, const char* sql, sqlite3CallbackFn cb, std::ostream& err)
 {
 	sqlite3 *db;
 	int openDbOk = sqlite3_open(filename, &db);
@@ -17,7 +17,7 @@ int executeSqlQuery(const char* clientName, const char* filename, const char* sq
 	int excuteSttmOK = sqlite3_exec(db, sql, cb, nullptr, &zErrMsg);
 	if (excuteSttmOK != 0)
 	{
-		err << clientName << ": " << zErrMsg << std::endl;
+		err << "sqlite3" << ": " << zErrMsg << std::endl;
 		sqlite3_free(zErrMsg);
 	}
 	sqlite3_close(db);
