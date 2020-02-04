@@ -14,8 +14,8 @@ if(CMAKE_BUILD_TYPE MATCHES DEBUG)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_COMPILER_FLAGS}")
 endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
 
-set(PROF_RAW "") # empty list
 set(TEST_BIN "") # empty list
+set(OBJECT_FILE "") # empty list
 set(TEST_SRC "") # empty list
 
 function(llvm_cover TARGET_NAME)
@@ -45,20 +45,27 @@ function(llvm_cover TARGET_NAME)
     )
     # append new bin file to TEST_BIN
     set(TEST_BIN ${TEST_BIN} ${TARGET_NAME} PARENT_SCOPE)
-    # append new profraw to PROF_RAW
-    set(PROF_RAW ${PROF_RAW} ${TARGET_NAME}.profdata PARENT_SCOPE)
+    # append new -object ${TARGET_NAME}
+    set(LOCAL_OBJ_FILE ${OBJECT_FILE} -object)
+    set(OBJECT_FILE ${LOCAL_OBJ_FILE} ${TARGET_NAME} PARENT_SCOPE)
     # append new source file to TEST_SRC
     set(TEST_SRC ${TEST_SRC} ${ARGN} PARENT_SCOPE)
 endfunction()
 
 function(llvm_cover_report_all)
-    message(STATUS "PRO_RAW ${PROF_RAW}")
     message(STATUS "TEST_BIN ${TEST_BIN}")
+
+    set(PROF_RAW ${TEST_BIN})
+    list(TRANSFORM PROF_RAW APPEND ".profraw")
+    message(STATUS "PROF_RAW ${PROF_RAW}")
+
+    message(STATUS "OBJECT_FILE ${OBJECT_FILE}")
     message(STATUS "TEST_SRC ${TEST_SRC}")
+
     add_custom_target(llvm_cover_report_all
         COMMAND llvm-profdata merge ${PROF_RAW} -output=llvm_cover_report_all.profdata
-        COMMAND llvm-cov report ${TEST_BIN} -instr-profile=llvm_cover_report_all.profdata ${TEST_SRC}
-        COMMAND llvm-cov export ${TEST_BIN} -summary-only -instr-profile=llvm_cover_report_all.profdata ${TEST_SRC} > llvm_cover_report_all.json
+        COMMAND llvm-cov report ${TEST_BIN}               -instr-profile=llvm_cover_report_all.profdata ${OBJECT_FILE} ${TEST_SRC}
+        COMMAND llvm-cov export ${TEST_BIN} -summary-only -instr-profile=llvm_cover_report_all.profdata ${OBJECT_FILE} ${TEST_SRC} > llvm_cover_report_all.json
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
     foreach(profraw IN LISTS TEST_BIN)

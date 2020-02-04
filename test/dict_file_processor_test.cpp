@@ -55,11 +55,9 @@ namespace _TEST_ {
 
 	class DbTestFixture: public ::testing::Test {
 	public:
-		DbTestFixture( ) {
-			// initialization code here
-		}
+		DbTestFixture( ) = default;
 
-		void SetUp( ) {
+		void SetUp( ) override {
 			// code here will execute just before the test ensues
 			int rc = std::remove(dbPath);
 			if(rc != 0)
@@ -68,14 +66,12 @@ namespace _TEST_ {
 			}
 		}
 
-		void TearDown( ) {
+		void TearDown( ) override {
 			// code here will be called just after the test completes
 			// ok to through exceptions from here if need be
 		}
 
-		~DbTestFixture( )  {
-			// cleanup any pending stuff, but no exceptions allowed
-		}
+		~DbTestFixture( ) override  = default;
 
 
 	};

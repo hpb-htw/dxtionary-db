@@ -42,6 +42,18 @@ include(GoogleTest)
 message(STATUS ${PROJECT_BINARY_DIR})
 configure_file(${PROJECT_SOURCE_DIR}/data.txt.gz ${PROJECT_BINARY_DIR}/data.txt.gz COPYONLY)
 
+## dxtionary_bind_test
+add_executable(dxtionary_bind_test dxtionary_bind_test.cpp)
+target_link_libraries(dxtionary_bind_test
+    PRIVATE
+        gtest_main
+        dxtionary_bind
+)
+gtest_add_tests(
+    TARGET
+        dxtionary_bind_test
+)
+
 ## gz_stream_test
 add_executable(gz_stream_test gz_stream_test.cpp)
 target_link_libraries(gz_stream_test
@@ -67,6 +79,7 @@ gtest_add_tests(
 add_custom_target(
     run_test ALL
     DEPENDS
+        dxtionary_bind_test
         gz_stream_test
         dict_file_processor_test
 )
@@ -88,8 +101,9 @@ endif()
 if(CMAKE_BUILD_TYPE MATCHES DEBUG)
     if("${CMAKE_C_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang" OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
         message(STATUS "use clang coverage tool")
-        llvm_cover(dict_file_processor_test ../../src/dict_file_processor.cpp ../../src/dict_file_processor.hpp)
-        llvm_cover(gz_stream_test ../../src/gz_stream.cpp ../../src/gz_stream.hpp)
+        llvm_cover(dxtionary_bind_test      ../../src/dxtionary_bind.cpp        ../../src/dxtionary_bind.h)
+        llvm_cover(dict_file_processor_test ../../src/dict_file_processor.cpp   ../../src/dict_file_processor.hpp)
+        llvm_cover(gz_stream_test           ../../src/gz_stream.cpp             ../../src/gz_stream.hpp)
         llvm_cover_report_all()
     endif()
 endif()

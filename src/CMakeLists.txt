@@ -28,7 +28,10 @@ target_link_libraries(dxtionary_bind
     PUBLIC
         sqlite3 -lm
 )
-
+target_include_directories(dxtionary_bind
+    INTERFACE
+        ${PROJECT_SOURCE_DIR}
+)
 
 ## import-raw-dict
 add_executable(import-raw-dict

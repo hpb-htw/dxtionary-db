@@ -2,8 +2,6 @@
 #include <sqlite3.h>
 #include "dxtionary_bind.h"
 
-//using namespace std;
-
 int executeSqlQuery(const char* clientName, const char* filename, const char* sql, sqlite3CallbackFn cb, std::ostream& err)
 {
 	sqlite3 *db;
