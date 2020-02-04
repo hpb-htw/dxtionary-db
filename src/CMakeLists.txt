@@ -18,6 +18,18 @@ target_link_libraries(dxtionary-db PUBLIC
         sqlite3 -lm
 )
 
+## dxtionary_bind
+add_library(dxtionary_bind
+    STATIC
+        dxtionary_bind.cpp
+        dxtionary_bind.h
+)
+target_link_libraries(dxtionary_bind
+    PUBLIC
+        sqlite3 -lm
+)
+
+
 ## import-raw-dict
 add_executable(import-raw-dict
     import_raw_dict.cpp

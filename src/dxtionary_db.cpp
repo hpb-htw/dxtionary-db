@@ -4,7 +4,7 @@
  * */
 #include <iostream>
 #include <sqlite3.h>
-
+#include "dxtionary_bind.h"
 #include "../dxtionary_version.h"
 
 
@@ -15,15 +15,15 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName)
 
     for(int i = 0; i < argc; i++){
         cout << azColName[i] << " = " << (argv[i] ? argv[i] : "NULL") << endl;
-    }    
+    }
     cout << endl;
     return 0;
 }
 
-int main(int argc, const char* argv[]) 
+int main(int argc, const char* argv[])
 {
     if (argc != 3) {
-		// report version        
+		// report version
         cout << argv[0] << " Version "
              << dxtionary_VERSION_MAJOR << "."
              << dxtionary_VERSION_MINOR << "."
@@ -31,7 +31,7 @@ int main(int argc, const char* argv[])
         cout << "Usage: " << argv[0] << " DATABASE SQL-STATEMENT";
 		return 1;
 	}
-
+/*
     sqlite3 *db;
     int openDbOk = sqlite3_open(argv[1], &db);
     if (openDbOk != 0)
@@ -49,8 +49,9 @@ int main(int argc, const char* argv[])
         sqlite3_free(zErrMsg);
     }
     sqlite3_close(db);
-	
 	return 0;
+*/
+	return executeSqlQuery(argv[0], argv[1], callback, cerr);
 }
 
 
