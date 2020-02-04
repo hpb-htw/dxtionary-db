@@ -51,7 +51,10 @@ int main(int argc, const char* argv[])
     sqlite3_close(db);
 	return 0;
 */
-	return executeSqlQuery(argv[0], argv[1], callback, cerr);
+	const char* clientname = argv[0];
+	const char* filename = argv[1];
+	const char* sql = argv[2];
+	return executeSqlQuery(clientname, filename, sql, callback, cerr);
 }
 
 

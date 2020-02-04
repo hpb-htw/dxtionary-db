@@ -13,9 +13,9 @@ add_executable(dxtionary-db
 target_include_directories(dxtionary-db PUBLIC
     "${PROJECT_BINARY_DIR}"
 )
-target_link_libraries(dxtionary-db PUBLIC
+target_link_libraries(dxtionary-db
     PRIVATE
-        sqlite3 -lm
+        dxtionary_bind
 )
 
 ## dxtionary_bind
