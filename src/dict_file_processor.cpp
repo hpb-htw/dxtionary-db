@@ -134,7 +134,7 @@ void Dxtionary::executeSqlNoOp(const string& sqlCmd)
 tuple<string,string> Dxtionary::buildCreateTableStatement(const vector<string>& columnNames) const
 {
 	string createTableCmd = "CREATE VIRTUAL TABLE ";
-	createTableCmd += (this->tableName + " USING fts5 (") ;
+	createTableCmd += (this->tableName + " USING fts5(") ;
 	// prepare for insert
 	string insertValueCmd = "INSERT INTO ";
 	insertValueCmd += (this->tableName + "(");

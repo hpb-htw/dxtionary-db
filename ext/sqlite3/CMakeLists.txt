@@ -3,21 +3,6 @@ cmake_minimum_required(VERSION 3.12)
 set(SQLITE_SPELLFIX "${CMAKE_CURRENT_BINARY_DIR}/sqlite3_spellfix.c")
 set(sqlite3_dep sqlite3.c spellfix.c extra_init.c.in)
 
-
-add_executable(sqlite3-ext
-    shell.c
-)
-
-target_link_libraries(sqlite3-ext
-    PUBLIC
-        sqlite3 -lm
-)
-
-target_include_directories(dxtionary_bind
-    INTERFACE
-    ${PROJECT_SOURCE_DIR}
-)
-
 add_library(sqlite3
     STATIC
         ${SQLITE_SPELLFIX}
@@ -46,6 +31,31 @@ target_compile_definitions(sqlite3
 target_compile_options(sqlite3
     PRIVATE -Os
 )
+
+# Development tools only
+if (UNIX AND NOT APPLE)
+    add_executable(sqlite3-ext
+        shell.c
+    )
+
+    target_link_libraries(sqlite3-ext
+        PUBLIC
+            sqlite3
+            -lm
+            -lreadline
+            -lncurses
+    )
+
+    target_include_directories(dxtionary_bind
+        INTERFACE
+            ${PROJECT_SOURCE_DIR}
+    )
+
+    target_compile_definitions(sqlite3-ext
+        PRIVATE
+            HAVE_READLINE
+    )
+endif ()
 
 function(concat sources destination)
     file(WRITE ${destination} "")

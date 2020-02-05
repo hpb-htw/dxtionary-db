@@ -4,11 +4,10 @@
 
 using namespace std;
 
-static ostringstream output;
-static int callback(void* NotUse, int argc, char** argv, char** azColName)
+ostringstream output;
+int callback(void* NotUse, int argc, char** argv, char** azColName)
 {
-	output.str(""); // empty string
-	output.clear(); // reset all error flags
+	cout << argc << ' ';
 	for(int i = 0; i < argc; ++i)
 	{
 		output << azColName[i] << " = " << (argv[i] ? argv[i] : "NULL") << endl;
@@ -31,6 +30,8 @@ namespace TEST_DXTIONARY_BIND {
 			{
 				cout << "Info: remove returned " << rc;
 			}
+			output.str("");
+			output.clear();
 		}
 
 		// code here will be called just after the test completes
@@ -44,7 +45,7 @@ namespace TEST_DXTIONARY_BIND {
 }
 
 namespace TEST_DXTIONARY_BIND {
-	TEST(dxtionary_bind_test, editdist3_active) {
+	TEST_F(DbTestFixture, dxtionary_bind_test_editdist3_active) {
 		const char* filename = ":memory:";
 		const char* query = "SELECT editdist3('Phantom', 'Fantom') AS editdist3;";
 		ostringstream err;
@@ -57,7 +58,7 @@ namespace TEST_DXTIONARY_BIND {
 		ASSERT_EQ(errorText, ""); // no error
 	}
 
-	TEST(dxtionary_bind_test, soundex_active) {
+	TEST_F(DbTestFixture, dxtionary_bind_test_soundex_active) {
 		const char* filename = ":memory:";
 		const char* query = "SELECT soundex('Phantom') AS soundex;";
 		ostringstream err;
@@ -74,16 +75,18 @@ namespace TEST_DXTIONARY_BIND {
 	{
 		vector<string> sql = {
 			"CREATE VIRTUAL TABLE email USING fts5 (sender, title, body);",
-			"INSERT INTO email(sender, title, body) VALUES ('test-sender', 'test title', 'test body'), ('test-sender 2', 'other title', 'test body');",
-			"SELECT sender, rank FROM email;"
+			"INSERT INTO email(sender, title, body) VALUES ('test-sender', 'todo', 'test body'), ('test-sender 2', 'todo task', 'test body');",
+			"SELECT sender FROM email;"
 		};
 		//";
 		vector<string>  expected = {
-			"", "", "TODO"
+			"", "", "sender = test-sender\n\nsender = test-sender 2\n\n"
 		};
 		for(size_t i = 0; i < sql.size(); ++i)
 		{
-			const char* query = sql[i].c_str() ;
+			size_t cmdLength = sql[i].size() + 1;
+			char* query = new char[cmdLength];
+			strncpy(query, sql[i].c_str(), cmdLength );
 			ostringstream err;
 			int rc = executeSqlQuery(dbPath, query, callback, err);
 			ASSERT_EQ(rc, 0);
@@ -92,6 +95,8 @@ namespace TEST_DXTIONARY_BIND {
 			ASSERT_EQ(collectedResult, expectedResult);
 			string errorText = err.str();
 			ASSERT_EQ(errorText, ""); // no error at all
+			delete [] query;
 		}
 	}
+
 }

@@ -185,7 +185,7 @@ bla;bla;bla
 			"col_1", "col_2", "col_3"
 		};
 		db.createTextTable(columns);
-		string expectedCreateTableCmd = "CREATE TABLE nix(col_1 TEXT, col_2 TEXT, col_3 TEXT);";
+		string expectedCreateTableCmd = "CREATE VIRTUAL TABLE nix USING fts5(col_1, col_2, col_3);";
 		ASSERT_EQ(sqlCreateTable, expectedCreateTableCmd);
 		string expectedSqlInsert = "INSERT INTO nix(col_1, col_2, col_3) VALUES (?, ?, ?);";
 		ASSERT_EQ(sqlInsertInto, expectedSqlInsert);
