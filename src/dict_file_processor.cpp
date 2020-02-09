@@ -239,7 +239,11 @@ vector<string> parseTextToVector(const string& s, const string& delimiter)
 string dictFileNameToSqlTableName(const string& fileName)
 {
 	fs::path p = fileName;
+#if defined(_MSC_VER)
+	wstring fn = p.filename();
+#else
 	string fn = p.filename();
+#endif
 	size_t firstPointPos = fn.find(".");
 	if(firstPointPos != string::npos) // trim last
 	{
