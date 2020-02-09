@@ -163,7 +163,7 @@ public:
 		string allInfo = msg + string(" ") + extraInfo;
 		size_t size = allInfo.size() + 1;
 		_what = new char [size];
-		std::strncpy(_what, allInfo.c_str(), size);
+		allInfo.copy(_what, size);
 	}
 
 	const char* what() const noexcept
