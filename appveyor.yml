@@ -1,10 +1,11 @@
 image:
-  - Visual Studio 2017
   - Ubuntu1804
+  - Visual Studio 2017
 
 install:
   - git submodule update --init --recursive
 
 build_script:
-  - cmake .
+  - cmake -S . -B build
+  - cd build
   - cmake --build .
