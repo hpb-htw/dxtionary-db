@@ -14,6 +14,7 @@
 	#include <filesystem>
 	namespace fs = std::filesystem;
 #elsif (_MSC_VER >= 1710)
+	#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 	#include <experimental/filesystem>
 	namespace fs = std::experimental::filesystem;
 #endif
