@@ -240,7 +240,8 @@ string dictFileNameToSqlTableName(const string& fileName)
 {
 	fs::path p = fileName;
 #if defined(_MSC_VER)
-	wstring fn = p.filename();
+	wstring _fn = p.filename();
+	string fn = string_cast<std::string>(_fn);
 #else
 	string fn = p.filename();
 #endif
@@ -253,6 +254,7 @@ string dictFileNameToSqlTableName(const string& fileName)
 	std::transform(fn.begin(), fn.end(), fn.begin(), [](char ch) {
 		return isspace(ch) ? '_' : ch;
 	});
+
 	return fn;
 }
 
