@@ -86,7 +86,8 @@ namespace TEST_DXTIONARY_BIND {
 		{
 			size_t cmdLength = sql[i].size() + 1;
 			char* query = new char[cmdLength];
-			strncpy(query, sql[i].c_str(), cmdLength );
+			//strncpy(query, sql[i].c_str(), cmdLength );
+			sql[i].copy(query, cmdLength);
 			ostringstream err;
 			int rc = executeSqlQuery(dbPath, query, callback, err);
 			ASSERT_EQ(rc, 0);
