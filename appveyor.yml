@@ -17,17 +17,17 @@ test_script:
   - echo 'run tests'
 
 for:
--
-  matrix:
-    only:
-      - image: Visual Studio 2019
-    test_script:
-      - cd test
-      - ctest -C Debug
--
-  matrix:
-    only:
-      - image: Ubuntu1804
-    test_script:
-      - cd test
-      - ctest
+  -
+    matrix:
+      only:
+        - image: Visual Studio 2019
+      test_script:
+        - cd test
+        - ctest -C Debug
+  -
+    matrix:
+      only:
+        - image: Ubuntu1804
+      test_script:
+        - cd test
+        - ctest
