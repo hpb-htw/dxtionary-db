@@ -14,5 +14,14 @@ build_script:
   - cmake --build .
 
 test_script:
-  - cd test
-  - ctest --version
+  - echo 'run tests'
+
+for:
+-
+  matrix:
+    only:
+      - image: Visual Studio 2019
+
+  test_script:
+    - cd test
+    - ctest -C Debug
