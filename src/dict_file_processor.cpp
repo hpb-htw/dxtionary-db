@@ -10,6 +10,11 @@
 #include "dict_file_processor.hpp"
 #include "gz_stream.hpp"
 
+#if defined(_MSC_VER)
+	#include <locale>
+	#include <codecvt>
+#endif
+
 #if (_MSC_VER >= 1920)     // MSVC 2019
 	#include <filesystem>
 	namespace fs = std::filesystem;
@@ -241,7 +246,8 @@ string dictFileNameToSqlTableName(const string& fileName)
 	fs::path p = fileName;
 #if defined(_MSC_VER)
 	wstring _fn = p.filename();
-	string fn = string_cast<std::string>(_fn);
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+	string fn = converter.to_bytes(_fn);
 #else
 	string fn = p.filename();
 #endif
