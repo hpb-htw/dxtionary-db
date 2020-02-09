@@ -1,5 +1,7 @@
 *.user
-build-*
+.idea
 cmake-build-*
-*-build
+*-build-*
+*-build/
 *-toolchain.cmake
+Testing
