@@ -21,6 +21,6 @@ for:
     matrix:
       only:
         - image: Visual Studio 2019
-      test_script:
-        - cd test
-        - ctest -C Debug
+    test_script:
+      - cd test
+      - ctest -C Debug
