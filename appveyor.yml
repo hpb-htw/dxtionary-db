@@ -24,6 +24,7 @@ for:
       test_script:
         - cd test
         - ctest -C Debug
+
   -
     matrix:
       only:
