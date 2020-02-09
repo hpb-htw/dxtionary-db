@@ -74,9 +74,9 @@ namespace TEST_DXTIONARY_BIND {
 	TEST_F(DbTestFixture, dxtionary_bind_test_full_text_search_5_active)
 	{
 		vector<string> sql = {
-			"CREATE VIRTUAL TABLE email USING fts5 (sender, title, body);",
-			"INSERT INTO email(sender, title, body) VALUES ('test-sender', 'todo', 'test body'), ('test-sender 2', 'todo task', 'test body');",
-			"SELECT sender FROM email;"
+			string("CREATE VIRTUAL TABLE email USING fts5 (sender, title, body);"),
+			string("INSERT INTO email(sender, title, body) VALUES ('test-sender', 'todo', 'test body'), ('test-sender 2', 'todo task', 'test body');"),
+			string("SELECT sender FROM email;")
 		};
 		//";
 		vector<string>  expected = {
@@ -84,10 +84,10 @@ namespace TEST_DXTIONARY_BIND {
 		};
 		for(size_t i = 0; i < sql.size(); ++i)
 		{
-			size_t cmdLength = sql[i].size() + 1;
+			size_t cmdLength = sql[i].length() + 1;
 			char* query = new char[cmdLength];
-			//strncpy(query, sql[i].c_str(), cmdLength );
-			sql[i].copy(query, cmdLength);
+			size_t copy = (sql[i]).copy(query, cmdLength);
+			query[copy] = '\0';
 			ostringstream err;
 			int rc = executeSqlQuery(dbPath, query, callback, err);
 			ASSERT_EQ(rc, 0);

@@ -78,7 +78,6 @@ gtest_add_tests(
 ## Run all unit-test after build
 add_custom_target(
     run_test
-    EXCLUDE_FROM_ALL
     DEPENDS
         dxtionary_bind_test
         gz_stream_test
