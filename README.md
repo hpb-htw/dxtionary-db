@@ -1,6 +1,8 @@
 # dxtionary-db
 CLI interface to sqlite db for dxtionary
 
+[![Build status](https://ci.appveyor.com/api/projects/status/vjp4au63vmaqe0c6?svg=true)](https://ci.appveyor.com/project/hpb-htw/dxtionary-db)
+
 
 
 ## Usage

@@ -1,6 +1,7 @@
 image:
   - Visual Studio 2019
   - Ubuntu1804
+  - macos
 
 install:
   - git submodule update --init --recursive
@@ -28,6 +29,14 @@ for:
     matrix:
       only:
         - image: Ubuntu1804
+    test_script:
+      - cd test
+      - ctest
+
+  -
+    matrix:
+      only:
+        - image: macos
     test_script:
       - cd test
       - ctest
