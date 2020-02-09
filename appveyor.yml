@@ -1,5 +1,5 @@
 image:
-  - Visual Studio 2017
+  - Visual Studio 2019
   - Ubuntu1804
 
 install:
@@ -9,6 +9,6 @@ build:
   verbosity: detailed
 
 build_script:
-  - cmake -S . -B build
+  - cmake -S . -B build -G Ninja
   - cd build
   - cmake --build .
