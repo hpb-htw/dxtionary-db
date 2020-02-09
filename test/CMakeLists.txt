@@ -77,7 +77,8 @@ gtest_add_tests(
 
 ## Run all unit-test after build
 add_custom_target(
-    run_test ALL
+    run_test
+    EXCLUDE_FROM_ALL
     DEPENDS
         dxtionary_bind_test
         gz_stream_test
@@ -86,7 +87,7 @@ add_custom_target(
 ## call ctest to run all unit test
 add_custom_command(TARGET run_test
     POST_BUILD
-    COMMAND ctest --output-on-failure
+    COMMAND ctest -C Debug --output-on-failure
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 

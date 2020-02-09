@@ -12,3 +12,7 @@ build_script:
   - cmake -S . -B build
   - cd build
   - cmake --build .
+
+test_script:
+  - cd build
+  - ctest -C Release --output-on-failure
