@@ -15,4 +15,4 @@ build_script:
 
 test_script:
   - cd test
-  - ctest -C Release --output-on-failure
+  - ctest --output-on-failure
