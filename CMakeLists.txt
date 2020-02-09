@@ -10,7 +10,7 @@ configure_file(gen-big-raw-data.py gen-big-raw-data.py COPYONLY)
 
 # compile all modules with warning enable
 if(MSVC)
-    add_compile_options(/W3 /WX)
+    add_compile_options(/W3)
 else()
     add_compile_options(-Wall -pedantic)
 endif()
