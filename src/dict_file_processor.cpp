@@ -7,11 +7,17 @@
 
 #include <sqlite3.h>
 
-#include <experimental/filesystem>
 #include "dict_file_processor.hpp"
 #include "gz_stream.hpp"
 
-namespace fs = std::experimental::filesystem;
+#if (_MSC_VER >= 1920)
+	#include <filesystem>
+	namespace fs = std::filesystem;
+#elsif (_MSC_VER >= 1910)
+	#include <experimental/filesystem>
+	namespace fs = std::experimental::filesystem;
+#endif
+
 using namespace std;
 
 bool checkFileExist(const char* path)
