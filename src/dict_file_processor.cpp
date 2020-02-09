@@ -10,11 +10,14 @@
 #include "dict_file_processor.hpp"
 #include "gz_stream.hpp"
 
-#if (_MSC_VER >= 1920)
+#if (_MSC_VER >= 1920)     // MSVC 2019
 	#include <filesystem>
 	namespace fs = std::filesystem;
-#elif (_MSC_VER >= 1710)
+#elif (_MSC_VER >= 1710)  // MSVS 2017
 	#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+	#include <experimental/filesystem>
+	namespace fs = std::experimental::filesystem;
+#else                    // other compiler on Ubuntu 18.04
 	#include <experimental/filesystem>
 	namespace fs = std::experimental::filesystem;
 #endif
