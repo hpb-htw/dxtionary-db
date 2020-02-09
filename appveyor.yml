@@ -9,7 +9,7 @@ build:
   verbosity: detailed
 
 build_script:
-  - cmake -S . -B build-DCMAKE_BUILD_TYPE=Debug
+  - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
   - cd build
   - cmake --build .
 
