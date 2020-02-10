@@ -85,7 +85,6 @@ target_include_directories(dict_file_processor
         ${PROJECT_SOURCE_DIR}
         ${PROJECT_BINARY_DIR}
 )
-set_target_properties()
 
 # Simple sqlite3 compile test; run with ctest
 enable_testing()
