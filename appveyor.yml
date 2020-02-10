@@ -1,14 +1,18 @@
 environment:
   access_token:
     secure: YEOldcmUtP23lCJLGxBYZu8TCFlb9DX+IWGK761pexF2fhy9VrDdt3cmWW1jLTt/
-
 image:
   - Ubuntu1804
   - macos
   - Visual Studio 2019
 
+branches:
+  only:
+    - master
+
 install:
   - git submodule update --init --recursive
+  - git pull --rebase origin bin
 
 build:
   verbosity: detailed
@@ -82,7 +86,6 @@ on_success:
   - ps: Add-Content "$HOME\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
   - git config --global user.email "ci-bot@appveyer.com"
   - git config --global user.name "App veyor CI Bot"
-  - git checkout master
   - git add -f bin/*
-  - git commit -a -m "auto add bin dir"
-  - git push origin bin
+  - git diff-index --quiet HEAD || git commit -a -m "auto add bin dir"
+  - git push --force origin bin
