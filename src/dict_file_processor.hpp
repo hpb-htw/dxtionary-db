@@ -160,24 +160,20 @@ public:
 		:msg(originError)
 		,extraInfo(extraInfo_)
 	{
-		string allInfo = msg + string(" ") + extraInfo;
-		size_t size = allInfo.size() + 1;
-		_what = new char [size];
-		allInfo.copy(_what, size);
+		allInfo = msg + string(" ") + extraInfo;
 	}
 
 	const char* what() const noexcept
 	{
-		return _what;
+		return allInfo.c_str();
 	}
 	~DatabaseError()
 	{
-		delete[] _what;
 	}
 private:
 	string msg;
 	string extraInfo;
-	char* _what;
+    string allInfo;
 };
 
 static inline void handleSqliteError(sqlite3* db, const char* extraInfo)
