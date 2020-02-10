@@ -13,6 +13,7 @@ branches:
 install:
   - git submodule update --init --recursive
   - git pull --rebase origin bin
+  - git checkout bin
 
 build:
   verbosity: detailed
@@ -88,4 +89,4 @@ on_success:
   - git config --global user.name "App veyor CI Bot"
   - git add -f bin/*
   - git diff-index --quiet HEAD || git commit -a -m "auto add bin dir"
-  - git push --force origin bin
+  - git push origin bin
