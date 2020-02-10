@@ -73,13 +73,7 @@ target_compile_features(dict_file_processor
     PUBLIC
         cxx_std_17
 )
-target_link_libraries(dict_file_processor
-    PUBLIC
-        -lstdc++fs # MacOS doesn't like this
-        -lm
-        gz_stream
-        sqlite3
-)
+
 target_include_directories(dict_file_processor
     INTERFACE
         ${PROJECT_SOURCE_DIR}
