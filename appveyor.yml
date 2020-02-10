@@ -73,4 +73,8 @@ after_test:
   - pwd
   - cd ../..
   - git add -f bin/*
+
+on_success:
+  - git config --global user.email "ci-bot@appveyer.com"
+  - git config --global user.name "App veyor CI Bot"
   - git commit -a -m "auto add bin dir"
