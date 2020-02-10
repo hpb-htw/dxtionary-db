@@ -11,7 +11,7 @@ build:
 
 for:
   -
-    matrix:
+    matrix: # WINDOWS
       only:
         - image: Visual Studio 2019
 
@@ -27,7 +27,7 @@ for:
       - cd test
       - ctest -C Debug
   -
-    matrix:
+    matrix: # LINUX UBUNTU
       only:
         - image: Ubuntu1804
 
@@ -52,7 +52,7 @@ for:
       - ctest
 
   -
-    matrix:
+    matrix: # MACOS
       only:
         - image: macos
 
