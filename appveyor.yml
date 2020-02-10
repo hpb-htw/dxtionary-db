@@ -86,5 +86,6 @@ on_success:
   - git config --global user.email "ci-bot@appveyer.com"
   - git config --global user.name "App veyor CI Bot"
   - git add -f bin/*
-  - git diff-index --quiet HEAD || git commit -a -m "auto add bin dir"; true
+  - git diff-index --quiet HEAD || git commit -a -m "auto add bin dir"
+  - git pull --rebase origin bin
   - git push --force origin bin
