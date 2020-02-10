@@ -4,6 +4,7 @@ project(dxtionary-db)
 # TODO: remve these two commands after test
 set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(BIN_DIR ${PROJECT_SOURCE_DIR}/../bin/${CMAKE_SYSTEM_NAME})
 
 # add the executable
 ## dxtionary-db
@@ -42,6 +43,7 @@ target_link_libraries(import-raw-dict
         gz_stream
         dict_file_processor
 )
+
 ### gz_stream
 add_library(gz_stream
     STATIC
@@ -102,27 +104,13 @@ ELSE()
     )
 ENDIF()
 
-# Simple sqlite3 compile test; run with ctest
-enable_testing()
-
-# does the application run
-add_test(NAME Usage COMMAND dxtionary-db)
-set_tests_properties(Usage
-  PROPERTIES PASS_REGULAR_EXPRESSION "Usage:.*DATABASE SQL-STATEMENT"
+# copy executable files to BIN_DIR
+add_custom_command(TARGET dxtionary-db
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dxtionary-db> ${BIN_DIR}/$<TARGET_FILE_NAME:dxtionary-db>
 )
 
-
-# define a function to simplify adding tests
-function(do_test name target select result)
-    add_test(NAME Comp_${name}
-        COMMAND ${target} "/tmp/test.db" ${select}
-    )
-    message(select)
-    set_tests_properties( Comp_${name}
-        PROPERTIES PASS_REGULAR_EXPRESSION ${result}
-    )
-endfunction(do_test)
-
-do_test(editdist3 dxtionary-db "SELECT editdist3('Julia', 'Jullian') as dist;" "dist = 200")
-do_test(json_quote dxtionary-db "SELECT json_quote(json_object('name', 'Jull\nian')) as json;" "json =.*")
-# do_test(sql_error dxtionary-db "CREATE TABLE IF NOT EXIST wiktionary(a TEXT, b TEXT, c TEXT); INSERT INTO wiktionary VALUES('D', 'DD', 'Das Buchstaben D', 'X')" "SQL error: table wiktionary has 3 columns but 4 values were supplied")
+add_custom_command(TARGET import-raw-dict
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:import-raw-dict> ${BIN_DIR}/$<TARGET_FILE_NAME:import-raw-dict>
+)
