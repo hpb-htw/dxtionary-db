@@ -73,4 +73,4 @@ after_test:
   - pwd
   - cd ../..
   - git add -f bin/*
-  - git commmit -a -m "auto add bin dir"
+  - git commit -a -m "auto add bin dir"
