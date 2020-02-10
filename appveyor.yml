@@ -4,6 +4,7 @@ image:
   - Visual Studio 2019
 
 install:
+  - sudo apt install gcc-8 g++-8
   - git submodule update --init --recursive
 
 build:
