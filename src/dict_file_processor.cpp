@@ -22,6 +22,9 @@
 	#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 	#include <experimental/filesystem>
 	namespace fs = std::experimental::filesystem;
+#elif defined(__APPLE__)
+	#include <filesystem>
+	namespace fs = std::filesystem;
 #else                    // other compiler on Ubuntu 18.04
 	#include <experimental/filesystem>
 	namespace fs = std::experimental::filesystem;
