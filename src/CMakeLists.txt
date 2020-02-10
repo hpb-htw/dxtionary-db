@@ -65,6 +65,10 @@ add_library(dict_file_processor
         dict_file_processor.cpp
         dict_file_processor.hpp
 )
+target_compile_options(dict_file_processor
+    PUBLIC
+    -std=c++17
+)
 target_compile_features(dict_file_processor
     PUBLIC
         cxx_std_17
