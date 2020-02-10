@@ -76,12 +76,13 @@ for:
 after_test:
   - pwd
   - cd ../..
-  - git add -f bin/*
 
 on_success:
   - git config --global credential.helper store
   - ps: Add-Content "$HOME\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
   - git config --global user.email "ci-bot@appveyer.com"
   - git config --global user.name "App veyor CI Bot"
+  - git checkout master
+  - git add -f bin/*
   - git commit -a -m "auto add bin dir"
   - git push origin master
