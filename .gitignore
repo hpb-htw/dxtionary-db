@@ -1,6 +1,7 @@
 *.user
 .idea
 cmake-build-*
+build/
 *-build-*
 *-build/
 *-toolchain.cmake

@@ -85,7 +85,6 @@ on_success:
   - ps: Add-Content "$HOME\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
   - git config --global user.email "ci-bot@appveyer.com"
   - git config --global user.name "App veyor CI Bot"
-  - git checkout master
   - git add -f bin/*
   - git commit -a -m "auto add bin dir"
   - git push origin bin
