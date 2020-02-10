@@ -7,7 +7,6 @@ image:
   - Visual Studio 2019
 
 branches:
-  # whitelist
   only:
     - master
 
