@@ -4,7 +4,6 @@ image:
   - Visual Studio 2019
 
 install:
-  - sudo apt install gcc-8 g++-8
   - git submodule update --init --recursive
 
 build:
@@ -15,6 +14,9 @@ for:
     matrix:
       only:
         - image: Visual Studio 2019
+
+    install:
+      - git submodule update --init --recursive
 
     build_script:
       - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
@@ -37,6 +39,7 @@ for:
       - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 10
       - sudo update-alternatives --set cc /usr/bin/gcc
       - sudo update-alternatives --set c++ /usr/bin/g++
+      - git submodule update --init --recursive
 
     build_script:
       #- cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=clang-toolchain.cmake
@@ -52,6 +55,9 @@ for:
     matrix:
       only:
         - image: macos
+
+    install:
+      - git submodule update --init --recursive
 
     build_script:
       - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
