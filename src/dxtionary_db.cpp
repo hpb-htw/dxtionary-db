@@ -32,7 +32,6 @@ int main(int argc, const char* argv[])
 		return 1;
 	}
 
-	const char* clientname = argv[0];
 	const char* filename = argv[1];
 	const char* sql = argv[2];
 	return executeSqlQuery(filename, sql, callback, cerr);

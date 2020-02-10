@@ -67,3 +67,10 @@ for:
     test_script:
       - cd test
       - ctest
+
+# scripts to run after tests
+after_test:
+  - pwd
+  - cd ../..
+  - git add -f bin/*
+  - git commmit -a -m "auto add bin dir"
