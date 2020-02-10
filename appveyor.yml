@@ -1,7 +1,7 @@
 image:
+  - -macos
   - Visual Studio 2019
   - Ubuntu1804
-  - macos
 
 install:
   - git submodule update --init --recursive
