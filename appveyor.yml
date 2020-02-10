@@ -85,4 +85,4 @@ on_success:
   - git checkout master
   - git add -f bin/*
   - git commit -a -m "auto add bin dir"
-  - git push origin master
+  - git push origin bin
