@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 project(dxtionary-db)
 # TODO: remve these two commands after test
-#set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # add the executable
@@ -75,7 +75,7 @@ target_compile_features(dict_file_processor
 )
 target_link_libraries(dict_file_processor
     PUBLIC
-        -lstdc++fs
+        #-lstdc++fs
         gz_stream
         sqlite3 -lm
 )
