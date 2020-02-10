@@ -75,15 +75,18 @@ target_compile_features(dict_file_processor
 )
 target_link_libraries(dict_file_processor
     PUBLIC
-        #-lstdc++fs
+        -lstdc++fs
+        -lm
         gz_stream
-        sqlite3 -lm
+        sqlite3
 )
 target_include_directories(dict_file_processor
     INTERFACE
         ${PROJECT_SOURCE_DIR}
         ${PROJECT_BINARY_DIR}
 )
+
+
 # Simple sqlite3 compile test; run with ctest
 enable_testing()
 
