@@ -7,12 +7,12 @@ set(CMAKE_CXX_COMPILER_TARGET ${triple})
 
 # Setup for profiling
 #
-if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+if(CMAKE_BUILD_TYPE MATCHES Debug)
     set(COVERAGE_COMPILER_FLAGS "-g -O0 -fprofile-instr-generate -fcoverage-mapping"
         CACHE INTERNAL "")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_COMPILER_FLAGS}")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_COMPILER_FLAGS}")
-endif(CMAKE_BUILD_TYPE MATCHES DEBUG)
+endif(CMAKE_BUILD_TYPE MATCHES Debug)
 
 set(TEST_BIN "") # empty list
 set(OBJECT_FILE "") # empty list

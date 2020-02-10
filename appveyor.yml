@@ -9,19 +9,17 @@ install:
 build:
   verbosity: detailed
 
-build_script:
-  - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-  - cd build
-  - cmake --build .
-
-test_script:
-  - echo 'run tests'
-
 for:
   -
     matrix:
       only:
         - image: Visual Studio 2019
+
+    build_script:
+      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+      - cd build
+      - cmake --build .
+
     test_script:
       - cd test
       - ctest -C Debug
@@ -29,6 +27,12 @@ for:
     matrix:
       only:
         - image: Ubuntu1804
+
+    build_script:
+      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=clang-toolchain.cmake
+      - cd build
+      - cmake --build .
+
     test_script:
       - cd test
       - ctest
@@ -37,6 +41,12 @@ for:
     matrix:
       only:
         - image: macos
+
+    build_script:
+      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+      - cd build
+      - cmake --build .
+
     test_script:
       - cd test
       - ctest
