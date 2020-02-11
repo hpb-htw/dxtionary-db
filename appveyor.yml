@@ -26,7 +26,7 @@ for:
       - git submodule update --init --recursive
 
     build_script:
-      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+      - cmake -S . -B build
       - cd build
       - cmake --build .
 
@@ -66,7 +66,7 @@ for:
       - git submodule update --init --recursive
 
     build_script:
-      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=clang-toolchain.cmake
       - cd build
       - cmake --build .
 
