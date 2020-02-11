@@ -17,6 +17,15 @@ else()
     add_compile_options(-Wall -pedantic)
 endif()
 
+# add optimize options if Build Release
+if(CMAKE_BUILD_TYPE MATCHES Release)
+    if(MSVC)
+        add_compile_options(/O2)
+    else()
+        add_compile_options(-O3)
+    endif()
+endif()
+
 # this matches same variable in zlib and suppress compiler flag -rdynamic
 if(MINGW)
     # suppress option -rdynamic by cross compiling zlib

@@ -26,7 +26,7 @@ for:
       - git submodule update --init --recursive
 
     build_script:
-      - cmake -S . -B build
+      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
       - cd build
       - cmake --build .
 
