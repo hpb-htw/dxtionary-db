@@ -2,8 +2,8 @@ environment:
   access_token:
     secure: YEOldcmUtP23lCJLGxBYZu8TCFlb9DX+IWGK761pexF2fhy9VrDdt3cmWW1jLTt/
 image:
-  - Ubuntu1804
   - macos
+  - Ubuntu1804
   - Visual Studio 2019
 
 branches:
