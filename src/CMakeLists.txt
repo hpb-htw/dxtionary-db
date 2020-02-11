@@ -4,6 +4,7 @@ project(dxtionary-db)
 # TODO: remve these two commands after test
 set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_STANDARD_REQUIRED ON)
+message("CMAKE_SYSTEM_NAME ${CMAKE_SYSTEM_NAME}")
 set(BIN_DIR ${PROJECT_SOURCE_DIR}/../bin/${CMAKE_SYSTEM_NAME})
 
 # add the executable
