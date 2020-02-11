@@ -102,6 +102,8 @@ ELSE()
     )
 ENDIF()
 
+
+
 # copy executable files to BIN_DIR
 add_custom_command(TARGET dxtionary-db
     POST_BUILD

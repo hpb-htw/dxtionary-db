@@ -20,7 +20,10 @@ endif()
 # add optimize options if Build Release
 if(CMAKE_BUILD_TYPE MATCHES Release)
     if(MSVC)
-        add_compile_options(/O2)
+        # Sorry windows user, I don't know how to set optimizing options for MS compiler cl
+        # '/O2' and '/RTC1' command-line options are incompatible
+        # add_compile_options(/O2)
+        message("Don't know how to set /O for cl!")
     else()
         add_compile_options(-O3)
     endif()
