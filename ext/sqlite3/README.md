@@ -1,4 +1,4 @@
-Copy of SQLite Amalgamation
+#Copy of SQLite Amalgamation
 
 To compile Sqlite with Spellfix extension you need:
 
@@ -7,6 +7,6 @@ To compile Sqlite with Spellfix extension you need:
 
 Version track:
 
-[3.31.1] sqlite-amalgamantion-3310100.zip
-[3.30.1] sqlite-autoconf-3300100.tar.gz
++ [3.31.1] sqlite-amalgamantion-3310100.zip
++ [3.30.1] sqlite-autoconf-3300100.tar.gz
 
