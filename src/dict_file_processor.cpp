@@ -275,7 +275,7 @@ BadDictFileException::BadDictFileException(const char* path_, const string& info
 {
 	//NOTE on C++20
 	//std::format("Cannot read file '{}'. Check if file exists", dicFileName)
-	msg = ((std::string("Bad file '") += path_) + "': ") + info;
+	msg = ((std::string("Bad file '") += path) + "': ") + info;
 }
 
 const char* BadDictFileException::what() const  noexcept
