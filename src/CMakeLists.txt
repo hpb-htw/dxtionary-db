@@ -81,7 +81,9 @@ target_include_directories(dict_file_processor
         ${PROJECT_SOURCE_DIR}
         ${PROJECT_BINARY_DIR}
 )
+
 IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    message("With Linux")
     target_link_libraries(dict_file_processor
         PUBLIC
             -lstdc++fs # MacOS doesn't like this
