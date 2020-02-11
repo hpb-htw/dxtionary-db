@@ -42,37 +42,34 @@ include(GoogleTest)
 message(STATUS ${PROJECT_BINARY_DIR})
 configure_file(${PROJECT_SOURCE_DIR}/data.txt.gz ${PROJECT_BINARY_DIR}/data.txt.gz COPYONLY)
 
+function(add_executable_unit_test TARGET MAIN_CPP DEPENDENCIES)
+    add_executable(${TARGET} ${MAIN_CPP})
+    target_link_libraries(${TARGET}
+        PRIVATE
+            ${DEPENDENCIES}
+    )
+    gtest_add_tests(TARGET ${TARGET})
+endfunction()
+
 ## dxtionary_bind_test
-add_executable(dxtionary_bind_test dxtionary_bind_test.cpp)
-target_link_libraries(dxtionary_bind_test
-    PRIVATE
-        gtest_main
-        dxtionary_bind
-)
-gtest_add_tests(
-    TARGET
-        dxtionary_bind_test
+add_executable_unit_test(
+    dxtionary_bind_test
+    dxtionary_bind_test.cpp
+    "gtest_main;dxtionary_bind"
 )
 
 ## gz_stream_test
-add_executable(gz_stream_test gz_stream_test.cpp)
-target_link_libraries(gz_stream_test
-    PRIVATE
-        gtest_main
-        gz_stream
+add_executable_unit_test(
+    gz_stream_test
+    gz_stream_test.cpp
+    "gtest_main;gz_stream"
 )
-gtest_add_tests(
-    TARGET gz_stream_test
-)
+
 ## dict_file_processor_test
-add_executable(dict_file_processor_test dict_file_processor_test.cpp)
-target_link_libraries(dict_file_processor_test
-    PRIVATE
-        gtest_main
-        dict_file_processor
-)
-gtest_add_tests(
-    TARGET dict_file_processor_test
+add_executable_unit_test(
+    dict_file_processor_test
+    dict_file_processor_test.cpp
+    "gtest_main;dict_file_processor"
 )
 
 ## Run all unit-test after build
