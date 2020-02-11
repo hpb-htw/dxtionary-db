@@ -6,7 +6,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 17)
 
 configure_file(dxtionary_version.h.in dxtionary_version.h)
-message(STATUS use toolchain file ${CMAKE_TOOLCHAIN_FILE})
+message(STATUS "use toolchain file ${CMAKE_TOOLCHAIN_FILE}")
 
 configure_file(gen-big-raw-data.py gen-big-raw-data.py COPYONLY)
 

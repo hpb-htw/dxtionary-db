@@ -64,8 +64,8 @@ function(llvm_cover_report_all)
 
     add_custom_target(llvm_cover_report_all
         COMMAND llvm-profdata merge ${PROF_RAW} -output=llvm_cover_report_all.profdata
-        COMMAND llvm-cov report ${TEST_BIN}               -instr-profile=llvm_cover_report_all.profdata ${OBJECT_FILE} ${TEST_SRC}
-        COMMAND llvm-cov export ${TEST_BIN} -summary-only -instr-profile=llvm_cover_report_all.profdata ${OBJECT_FILE} ${TEST_SRC} > llvm_cover_report_all.json
+        COMMAND llvm-cov report ${TEST_BIN}                            -instr-profile=llvm_cover_report_all.profdata ${OBJECT_FILE} ${TEST_SRC}
+        COMMAND llvm-cov export ${TEST_BIN} -format=lcov               -instr-profile=llvm_cover_report_all.profdata ${OBJECT_FILE} ${TEST_SRC} > llvm_cover_report_all.lcov
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
     foreach(profraw IN LISTS TEST_BIN)

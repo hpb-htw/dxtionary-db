@@ -49,7 +49,6 @@ for:
       - git submodule update --init --recursive
 
     build_script:
-      #- cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=clang-toolchain.cmake
       - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
       - cd build
       - cmake --build .

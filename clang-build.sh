@@ -6,6 +6,6 @@
 
 # ---------------------------------------- #
 
-cmake -S . -B clang-build -DCMAKE_TOOLCHAIN_FILE=clang-toolchain.cmake
+#cmake -S . -B clang-build -DCMAKE_TOOLCHAIN_FILE=clang-toolchain.cmake
 # to make debug version:
-#cmake -S . -B clang-build-debug -DCMAKE_TOOLCHAIN_FILE=clang-toolchain.cmake -DCMAKE_BUILD_TYPE=DEBUG
+cmake -S . -B clang-build-debug -DCMAKE_TOOLCHAIN_FILE=clang-toolchain.cmake -DCMAKE_BUILD_TYPE=Debug

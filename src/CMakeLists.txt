@@ -81,7 +81,7 @@ target_include_directories(dict_file_processor
         ${PROJECT_SOURCE_DIR}
         ${PROJECT_BINARY_DIR}
 )
-IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_link_libraries(dict_file_processor
         PUBLIC
             -lstdc++fs # MacOS doesn't like this
@@ -89,14 +89,14 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
             gz_stream
             sqlite3
     )
-ELSE()
+else()
     target_link_libraries(dict_file_processor
         PUBLIC
             -lm
             gz_stream
             sqlite3
     )
-ENDIF()
+endif()
 
 # copy executable files to BIN_DIR
 add_custom_command(TARGET dxtionary-db

@@ -98,7 +98,7 @@ endif()
 
 # Code coverage configuration only for clang++ compiler with llvm installed
 # This code works, but there is too much manual maintaining step.
-if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+if(CMAKE_BUILD_TYPE MATCHES Debug)
     if("${CMAKE_C_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang" OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "(Apple)?[Cc]lang")
         message(STATUS "use clang coverage tool")
         llvm_cover(dxtionary_bind_test      ../../src/dxtionary_bind.cpp        ../../src/dxtionary_bind.h)
