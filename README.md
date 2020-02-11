@@ -33,3 +33,9 @@ import-raw-dict <Database file> <Dictionary file>+
 ```
 
 require exact one Database file and at least one dictionary file.
+`<Dictionary file>+` have following structure:
+
+```csv
+column1<separator>column2<separator>column3
+....
+```
