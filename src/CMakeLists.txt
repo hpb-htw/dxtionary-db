@@ -90,6 +90,7 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
             sqlite3
     )
 ELSE()
+    message("No Linux")
     target_link_libraries(dict_file_processor
         PUBLIC
             -lm
