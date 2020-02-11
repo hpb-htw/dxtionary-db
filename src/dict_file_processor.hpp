@@ -131,7 +131,6 @@ public:
 	explicit BadDictFileException(const char* path_, const string& info_="");
 	const char * what() const  noexcept ;
 private:
-	const char* path;
 	string info;
 	string msg;
 };
