@@ -5,7 +5,7 @@ project(dxtionary-db)
 set(CMAKE_CXX_STANDARD 17)
 #set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message("CMAKE_SYSTEM_NAME ${CMAKE_SYSTEM_NAME}")
-set(BIN_DIR ${PROJECT_SOURCE_DIR}/../bin/${CMAKE_SYSTEM_NAME})
+set(BIN_DIR ${PROJECT_SOURCE_DIR}/../bin/${CMAKE_BUILD_TYPE}/${CMAKE_SYSTEM_NAME})
 
 # add the executable
 ## dxtionary-db
@@ -83,8 +83,7 @@ target_include_directories(dict_file_processor
         ${PROJECT_BINARY_DIR}
 )
 
-IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    message("With Linux")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     target_link_libraries(dict_file_processor
         PUBLIC
             -lstdc++fs # MacOS doesn't like this
@@ -92,25 +91,26 @@ IF(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
             gz_stream
             sqlite3
     )
-ELSE()
-    message("No Linux")
+else()
     target_link_libraries(dict_file_processor
         PUBLIC
             -lm
             gz_stream
             sqlite3
     )
-ENDIF()
+endif()
 
-
+function(copy_executable_file_to_bin EXE_TARGET)
+    foreach(exe_file IN LISTS ARGV)
+        add_custom_command(TARGET ${exe_file}
+            POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${exe_file}> ${BIN_DIR}/$<TARGET_FILE_NAME:${exe_file}>
+        )
+    endforeach()
+endfunction()
 
 # copy executable files to BIN_DIR
-add_custom_command(TARGET dxtionary-db
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dxtionary-db> ${BIN_DIR}/$<TARGET_FILE_NAME:dxtionary-db>
+copy_executable_file_to_bin(
+    dxtionary-db import-raw-dict
 )
 
-add_custom_command(TARGET import-raw-dict
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:import-raw-dict> ${BIN_DIR}/$<TARGET_FILE_NAME:import-raw-dict>
-)
