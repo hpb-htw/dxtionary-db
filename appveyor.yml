@@ -87,5 +87,5 @@ on_success:
   - git config --global user.name "App veyor CI Bot"
   - git add -f bin/*
   - git diff-index --quiet HEAD || git commit -a -m "auto add bin dir"
-  - git merge -s recursive ours origin/bin
+  - git merge --no-edit -s recursive -X ours origin/bin
   - git push --force origin HEAD:bin
