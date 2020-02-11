@@ -36,6 +36,11 @@ require exact one Database file and at least one dictionary file.
 `<Dictionary file>+` have following structure:
 
 ```csv
-column1<separator>column2<separator>column3
+header-1<separator>header-2<separator>header-3
+cell-1-1<separator>cell-1-2<separator>cell-1-3
+cell-2-1<separator>cell-2-2<separator>cell-2-3
 ....
 ```
+
+for this version the delimiter must be exactly `<separator`. This rule may be changed in next versions.
+
