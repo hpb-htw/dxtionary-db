@@ -52,14 +52,9 @@ for:
       - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
       - cd build
       - cmake --build .
-      - cd ..
-      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-      - cd build
-      - cmake --build .
-      - cd ..
 
     test_script:
-      - cd build-Debug/test
+      - cd build/test
       - ctest
 
   -
