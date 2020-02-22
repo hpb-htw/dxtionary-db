@@ -74,12 +74,9 @@ for:
       - cd test
       - ctest
 
-    # scripts to run after tests (run it only for windows, or the last platform)
     after_test:
       - pwd
-      - cd ../../bin
-      - cmake -E tar cvfz Release.tar.gz Release
-      - cd ..
+      - cd ../..
 
     on_success:
       - git config --global credential.helper store
@@ -89,4 +86,8 @@ for:
       - git add -f bin/*
       - git diff-index --quiet HEAD || git commit -a -m "auto add bin dir"
       - git merge --no-edit -s recursive -X ours origin/bin
+      # scripts to run after tests (run it only for windows, or the last platform)
+      # Make release
+      - cd bin
+      - cmake -E tar cvfz Release.tar.gz Release
       - git push --force origin HEAD:bin
