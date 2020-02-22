@@ -49,12 +49,17 @@ for:
       - git submodule update --init --recursive
 
     build_script:
-      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+      - cmake -S . -B build-Debug -DCMAKE_BUILD_TYPE=Debug
+      - cd build-Debug
+      - cmake --build .
+      - cd ..
+      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
       - cd build
       - cmake --build .
+      - cd ..
 
     test_script:
-      - cd test
+      - cd buidl-Debug/test
       - ctest
 
   -
