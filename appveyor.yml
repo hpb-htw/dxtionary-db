@@ -59,7 +59,7 @@ for:
       - cd ..
 
     test_script:
-      - cd buidl-Debug/test
+      - cd build-Debug/test
       - ctest
 
   -
