@@ -86,11 +86,11 @@ on_success:
   - git add -f bin/*
   - git diff-index --quiet HEAD || git commit -a -m "auto add bin dir"
   # Make release
+  - git merge --no-edit -s recursive -X ours origin/bin
   - cd bin
   - echo "cmake -E remove -f Release.tar.gz"
   - cmake -E tar cvfz Release.tar.gz Release
   - cd ..
   - git add -f bin/Release.tar.gz || cmake -E true
   - git diff-index --quiet HEAD || git commit -a -m "auto add release.tar.gz"
-  - git merge --no-edit -s recursive -X ours origin/bin
   - git push --force origin HEAD:bin
