@@ -54,7 +54,7 @@ for:
       - cmake --build .
 
     test_script:
-      - cd build/test
+      - cd test
       - ctest
 
   -
