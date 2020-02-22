@@ -79,7 +79,5 @@ for:
       - cd test
       - ctest
 
-# scripts to run after tests
-after_test:
-  - pwd
-  - cd ../..
+
+

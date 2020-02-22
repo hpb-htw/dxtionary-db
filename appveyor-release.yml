@@ -74,17 +74,20 @@ for:
       - cd test
       - ctest
 
-# scripts to run after tests
-after_test:
-  - pwd
-  - cd ../..
+    # scripts to run after tests (run it only for windows, or the last platform)
+    after_test:
+      - pwd
+      - cd ../..
 
-on_success:
-  - git config --global credential.helper store
-  - ps: Add-Content "$HOME\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
-  - git config --global user.email "ci-bot@appveyer.com"
-  - git config --global user.name "App veyor CI Bot"
-  - git add -f bin/*
-  - git diff-index --quiet HEAD || git commit -a -m "auto add bin dir"
-  - git merge --no-edit -s recursive -X ours origin/bin
-  - git push --force origin HEAD:bin
+    on_success:
+      - cd bin/
+      - cmake -E tar cvfz Release.tar.gz Release
+      - cd ..
+      - git config --global credential.helper store
+      - ps: Add-Content "$HOME\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
+      - git config --global user.email "ci-bot@appveyer.com"
+      - git config --global user.name "App veyor CI Bot"
+      - git add -f bin/*
+      - git diff-index --quiet HEAD || git commit -a -m "auto add bin dir"
+      - git merge --no-edit -s recursive -X ours origin/bin
+      - git push --force origin HEAD:bin
