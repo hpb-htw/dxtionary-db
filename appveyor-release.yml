@@ -79,16 +79,18 @@ after_test:
   - cd ../..
 
 on_success:
-  # Make release
-  - cd bin
-  - cmake -E remove -f Release.tar.gz
-  - cmake -E tar cvfz Release.tar.gz Release
-  - cd ..
   - git config --global credential.helper store
   - ps: Add-Content "$HOME\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
   - git config --global user.email "ci-bot@appveyer.com"
   - git config --global user.name "App veyor CI Bot"
   - git add -f bin/*
   - git diff-index --quiet HEAD || git commit -a -m "auto add bin dir"
+  # Make release
+  - cd bin
+  - echo "cmake -E remove -f Release.tar.gz"
+  - cmake -E tar cvfz Release.tar.gz Release
+  - cd ..
+  - git add bin/Release.tar.gz ; cmake -E true
+  - git diff-index --quiet HEAD || git commit -a -m "auto add release.tar.gz"
   - git merge --no-edit -s recursive -X ours origin/bin
   - git push --force origin HEAD:bin
