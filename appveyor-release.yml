@@ -77,12 +77,11 @@ for:
     # scripts to run after tests (run it only for windows, or the last platform)
     after_test:
       - pwd
-      - cd ../..
-
-    on_success:
-      - cd bin/
+      - cd ../../bin
       - cmake -E tar cvfz Release.tar.gz Release
       - cd ..
+
+    on_success:
       - git config --global credential.helper store
       - ps: Add-Content "$HOME\.git-credentials" "https://$($env:access_token):x-oauth-basic@github.com`n"
       - git config --global user.email "ci-bot@appveyer.com"
