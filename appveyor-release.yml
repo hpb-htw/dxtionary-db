@@ -89,7 +89,7 @@ on_success:
   # scripts to run after tests (run it only for windows, or the last platform)
   # Make release
   - cd bin
-  - cmake -E rm -rf Release.tar.gz
+  - cmake -E remove -f Release.tar.gz
   - cmake -E tar cvfz Release.tar.gz Release
   - cd ..
   - git push --force origin HEAD:bin
