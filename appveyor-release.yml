@@ -88,7 +88,6 @@ on_success:
   # Make release
   - git merge --no-edit -s recursive -X ours origin/bin
   - cd bin
-  - echo "cmake -E remove -f Release.tar.gz"
   - cmake -E tar cvfz Release.tar.gz Release
   - cd ..
   - git add -f bin/Release.tar.gz || cmake -E true
