@@ -12,7 +12,7 @@ int main(int argc, const char** argv) {
 	const int BAD_DATABASE_FILE = 3;
 
 	if (argc < 3) {
-		cerr << "Error: experted Dictionary file and databse file."
+		cerr << "Error: expected one database file and one or more dictionary files."
 			 << endl;
 		cout << argv[0] << " <Database file> <Dictionary file>+"
 			 << endl;
