@@ -99,7 +99,7 @@ vector<string> parseTextToVector(const string& text, const string& delimiter);
 string dictFileNameToSqlTableName(const string& fileName);
 static inline void printLineCount(size_t lineNumber)
 {
-	std::cout << lineNumber << endl;
+	std::cout << "Line number: " << lineNumber << endl;
 }
 // trim from start (in place)
 static inline void ltrim(std::string &s)
