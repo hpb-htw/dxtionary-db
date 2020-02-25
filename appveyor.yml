@@ -12,10 +12,7 @@ build:
   verbosity: detailed
 
 install:
-  - wget https://apt.llvm.org/llvm.sh
-  - chmod +x llvm.sh
-  - sudo ./llvm.sh
-  - sudo apt install -y llvm-profdata
+  - sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
   - git submodule update --init --recursive
 
 build_script:
