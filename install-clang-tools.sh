@@ -11,7 +11,6 @@ set -e
 wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main"
 sudo apt update
-sudo apt remove -y clang-9 llvm-9 lld-9 lldb-9
 sudo apt install -y clang-10 llvm-10 lld-10 lldb-10
 sudo apt install -y clang-format-10 clang-tidy-10 clang-tools-10
 
@@ -71,3 +70,5 @@ sudo update-alternatives \
 sudo update-alternatives \
   --install /usr/bin/clang++               clang++                /usr/bin/clang++-10 20
 
+sudo update-alternatives --config clang
+sudo update-alternatives --config clang++
