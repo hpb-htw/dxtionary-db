@@ -2,82 +2,37 @@ environment:
   access_token:
     secure: YEOldcmUtP23lCJLGxBYZu8TCFlb9DX+IWGK761pexF2fhy9VrDdt3cmWW1jLTt/
 image:
-  - macos
   - Ubuntu1804
-  - Visual Studio 2019
 
 branches:
   only:
     - master
 
-install:
-  - git submodule update --init --recursive
-
 build:
   verbosity: detailed
 
-for:
-  -
-    matrix: # WINDOWS
-      only:
-        - image: Visual Studio 2019
+install:
+  - echo "Install LLVM 10"
+  - sudo echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main" >> /etc/apt/sources.list
+  - sudo apt-get update && sudo apt-get upgrade -y
+  - sudo apt-get install -y clang-10 lldb-10 lld-10 clangd-10 llvm-profdata-10
+  - echo "Install submodules"
+  - git submodule update --init --recursive
 
-    install:
-      - git submodule update --init --recursive
 
-    build_script:
-      - cmake -S . -B build
-      - cd build
-      - cmake --build .
+build_script:
+  - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+  - cd build
+  - cmake --build .
 
-    test_script:
-      - cd test
-      - ctest -C Debug
-  -
-    matrix: # LINUX UBUNTU
-      only:
-        - image: Ubuntu1804
+test_script:
+  - cd test
+  - ctest
 
-    install:
-      - sudo apt install gcc-8 g++-8
-      - sudo update-alternatives --remove-all gcc; true
-      - sudo update-alternatives --remove-all g++; true
-      - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 10
-      - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 10
-      - sudo update-alternatives --set cc /usr/bin/gcc
-      - sudo update-alternatives --set c++ /usr/bin/g++
-      - git submodule update --init --recursive
-
-    build_script:
-      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
-      - cd build
-      - cmake --build .
-
-    test_script:
-      - cd test
-      - ctest
-
-  -
-    matrix: # MACOS
-      only:
-        - image: macos
-
-    install:
-      - git submodule update --init --recursive
-
-    build_script:
-      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=clang-toolchain.cmake
-      - cd build
-      - cmake --build .
-
-    test_script:
-      - cd test
-      - ctest
-
-    on_success:
-      - echo "Done"
-      - pwd
-      - cd ..
-      - make llvm_cover_report_all
+on_success:
+  - echo "Done"
+  - pwd
+  - cd ..
+  - make llvm_cover_report_all
 
 
