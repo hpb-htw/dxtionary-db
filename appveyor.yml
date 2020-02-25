@@ -16,13 +16,13 @@ install:
   - wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
   - sudo add-apt-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main"
   - sudo apt-get update
-  - sudo apt-get install -y clang-10 lldb-10 lld-10 clangd-10 llvm-10-dev clang-tools-10
+  - sudo apt-get install -y clang-10 lldb-10 lld-10 clangd-10 llvm-10 llvm-10-dev clang-tools-10
   - echo "Install submodules"
   - git submodule update --init --recursive
 
 
 build_script:
-  - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+  - cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=clang-toolchain.cmake -DCMAKE_BUILD_TYPE=Debug
   - cd build
   - cmake --build .
 
