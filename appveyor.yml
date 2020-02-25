@@ -2,9 +2,8 @@ environment:
   access_token:
     secure: YEOldcmUtP23lCJLGxBYZu8TCFlb9DX+IWGK761pexF2fhy9VrDdt3cmWW1jLTt/
 image:
-  - macos
   - Ubuntu1804
-  - Visual Studio 2019
+
 
 branches:
   only:
@@ -39,17 +38,13 @@ for:
         - image: Ubuntu1804
 
     install:
-      - sudo apt install gcc-8 g++-8
-      - sudo update-alternatives --remove-all gcc; true
-      - sudo update-alternatives --remove-all g++; true
-      - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 10
-      - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 10
-      - sudo update-alternatives --set cc /usr/bin/gcc
-      - sudo update-alternatives --set c++ /usr/bin/g++
+      - wget https://apt.llvm.org/llvm.sh
+      - chmod +x llvm.sh
+      - sudo ./llvm.sh 10
       - git submodule update --init --recursive
 
     build_script:
-      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+      - cmake -S . -B build -DCMAKE_TOOLCHAIN_FILE=clang-toolchain.cmake -DCMAKE_BUILD_TYPE=Debug
       - cd build
       - cmake --build .
 
@@ -75,4 +70,5 @@ for:
       - ctest
 
 
-
+on_success:
+  - pwd
