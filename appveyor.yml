@@ -74,5 +74,8 @@ for:
       - cd test
       - ctest
 
+    on_success:
+      - echo "Done"
+      - pwd
 
 
