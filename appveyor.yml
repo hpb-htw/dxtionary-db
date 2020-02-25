@@ -38,7 +38,7 @@ for:
       - cd test
       - ctest
 
-    on_success:
-      - pwd
-      - cd ..
-      - make llvm_cover_report_all
+on_success:
+  - pwd
+  - cd ..
+  - make llvm_cover_report_all
