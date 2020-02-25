@@ -42,7 +42,6 @@ sudo update-alternatives \
 
 sudo update-alternatives \
   --install /usr/bin/clang                 clang                  /usr/bin/clang-10     20 \
-  --install /usr/bin/clang++               clang++                /usr/bin/clang++-10 20 \
   --slave   /usr/bin/lld                   lld                    /usr/bin/lld-10 \
   --slave   /usr/bin/clang-format          clang-format           /usr/bin/clang-format-10  \
   --slave   /usr/bin/clang-tidy            clang-tidy             /usr/bin/clang-tidy-10  \
@@ -67,3 +66,7 @@ sudo update-alternatives \
   --slave   /usr/bin/find-all-symbols      find-all-symbols       /usr/bin/find-all-symbols-10 \
   --slave   /usr/bin/lldb                  lldb                   /usr/bin/lldb-10 \
   --slave   /usr/bin/lldb-server           lldb-server            /usr/bin/lldb-server-10
+
+sudo update-alternatives \
+  --install /usr/bin/clang++               clang++                /usr/bin/clang++-10 20
+
