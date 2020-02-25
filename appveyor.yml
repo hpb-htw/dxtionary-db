@@ -13,7 +13,7 @@ build:
 
 install:
   - echo "Install LLVM 10"
-  - sudo ./install-clang-tools
+  - sudo ./install-clang-tools.sh
   - echo "Install submodules"
   - git submodule update --init --recursive
 
