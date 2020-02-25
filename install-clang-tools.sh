@@ -3,6 +3,7 @@
 # Remove all existing alternatives
 sudo update-alternatives --remove-all llvm
 sudo update-alternatives --remove-all clang
+sudo update-alternatives --remove-all clang++
 
 # exit on first error
 set -e
@@ -41,7 +42,7 @@ sudo update-alternatives \
 	--slave   /usr/bin/llvm-tblgen       llvm-tblgen      /usr/bin/llvm-tblgen-10
 
 sudo update-alternatives \
-  --install /usr/bin/clang                 clang                  /usr/bin/clang-10     20 \
+  --install /usr/bin/clang                 clang                  /usr/bin/clang-10     2000 \
   --slave   /usr/bin/lld                   lld                    /usr/bin/lld-10 \
   --slave   /usr/bin/clang-format          clang-format           /usr/bin/clang-format-10  \
   --slave   /usr/bin/clang-tidy            clang-tidy             /usr/bin/clang-tidy-10  \
@@ -68,7 +69,7 @@ sudo update-alternatives \
   --slave   /usr/bin/lldb-server           lldb-server            /usr/bin/lldb-server-10
 
 sudo update-alternatives \
-  --install /usr/bin/clang++               clang++                /usr/bin/clang++-10 20
+  --install /usr/bin/clang++               clang++                /usr/bin/clang++-10 2000
 
 sudo update-alternatives --config clang
 sudo update-alternatives --config clang++
