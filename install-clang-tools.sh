@@ -12,7 +12,7 @@ wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
 sudo apt-add-repository "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main"
 sudo apt update
 sudo apt install -y clang-10 llvm-10 lld-10 lldb-10
-sudo apt install -y clang-{format,tidy,tools}-10 clang-10-doc clang-10-examples
+sudo apt install -y clang-format-10 clang-tidy-10 clang-tools-10 clang-10-doc clang-10-examples
 
 
 # llvm-10 and clang-10
