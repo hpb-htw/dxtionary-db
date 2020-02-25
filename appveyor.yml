@@ -3,8 +3,8 @@ environment:
     secure: YEOldcmUtP23lCJLGxBYZu8TCFlb9DX+IWGK761pexF2fhy9VrDdt3cmWW1jLTt/
 image:
   - Ubuntu1804
-  - macos
-  - Visual Studio 2019
+#  - macos
+#  - Visual Studio 2019
 
 
 branches:
@@ -18,22 +18,6 @@ build:
   verbosity: detailed
 
 for:
-  -
-    matrix: # WINDOWS
-      only:
-        - image: Visual Studio 2019
-
-    install:
-      - git submodule update --init --recursive
-
-    build_script:
-      - cmake -S . -B build
-      - cd build
-      - cmake --build .
-
-    test_script:
-      - cd test
-      - ctest -C Debug
   -
     matrix: # LINUX UBUNTU
       only:
@@ -54,23 +38,7 @@ for:
       - cd test
       - ctest
 
-  -
-    matrix: # MACOS
-      only:
-        - image: macos
-
-    install:
-      - git submodule update --init --recursive
-
-    build_script:
-      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_TOOLCHAIN_FILE=clang-toolchain.cmake
-      - cd build
-      - cmake --build .
-
-    test_script:
-      - cd test
-      - ctest
-
-
-on_success:
-  - pwd
+  on_success:
+    - pwd
+    - cd ..
+    - make llvm_cover_report_all
