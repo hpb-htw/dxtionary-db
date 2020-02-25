@@ -33,6 +33,7 @@ sudo update-alternatives \
 	--slave   /usr/bin/llvm-mcmarkup     llvm-mcmarkup    /usr/bin/llvm-mcmarkup-10 \
 	--slave   /usr/bin/llvm-nm           llvm-nm          /usr/bin/llvm-nm-10 \
 	--slave   /usr/bin/llvm-objdump      llvm-objdump     /usr/bin/llvm-objdump-10 \
+	--slave   /usr/bin/llvm-profdata     llvm-profdata    /usr/bin/llvm-profdata-10 \
 	--slave   /usr/bin/llvm-ranlib       llvm-ranlib      /usr/bin/llvm-ranlib-10 \
 	--slave   /usr/bin/llvm-readobj      llvm-readobj     /usr/bin/llvm-readobj-10 \
 	--slave   /usr/bin/llvm-rtdyld       llvm-rtdyld      /usr/bin/llvm-rtdyld-10 \
