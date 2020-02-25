@@ -42,7 +42,7 @@ for:
     install:
       - wget https://apt.llvm.org/llvm.sh
       - chmod +x llvm.sh
-      - sudo ./llvm.sh 10
+      - sudo ./llvm.sh
       - git submodule update --init --recursive
 
     build_script:
