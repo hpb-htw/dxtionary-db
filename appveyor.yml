@@ -32,5 +32,7 @@ on_success:
   - pwd
   - cd ..
   - make llvm_cover_report_all
+  - ls
+  - bash <(curl -s https://codecov.io/bash) -f  llvm_cover_report_all
 
 
