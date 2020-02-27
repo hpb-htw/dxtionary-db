@@ -23,14 +23,11 @@ build_script:
   - cd build
   - cmake --build .
 
-test_script:
-  - cd test
-  - ctest
-
 on_success:
   - echo "Done"
   - pwd
-  - cd ..
   - make llvm_cover_report_all
+  - ls test
+  - bash <(curl -s https://codecov.io/bash) -f  test/llvm_cover_report_all.lcov
 
 
