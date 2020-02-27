@@ -91,5 +91,5 @@ on_success:
   - cmake -E tar cvfz Release.tar.gz Release
   - cd ..
   - git add -f bin/Release.tar.gz || cmake -E true
-  - git diff-index --quiet HEAD || git commit -a -m "auto add release.tar.gz"
+  - git diff-index --quiet HEAD || git commit -a -m "auto add release.tar.gz $(date)"
   - git push --force origin HEAD:bin
