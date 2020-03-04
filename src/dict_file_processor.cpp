@@ -183,12 +183,12 @@ tuple<string,string> Dxtionary::buildCreateTableStatement(const vector<string>& 
 
 
 
-void DictFileProcessor::processDictFile(const char* dictPath, Dxtionary& dxtionary) const
+void DictFileProcessor::processDictFile(const char* gzipDictPath, Dxtionary& dxtionary) const
 {
 
-	ifstream ifs(dictPath, ios::in | ios::binary);
+	ifstream ifs(gzipDictPath, ios::in | ios::binary);
 	if (!ifs) {
-		throw DictFileNotReadable(dictPath);
+		throw DictFileNotReadable(gzipDictPath);
 	}
 	GZFileStreamBuffer gzBuffer(&ifs);
 	istream decompressedStream(&gzBuffer);
@@ -268,18 +268,4 @@ string dictFileNameToSqlTableName(const string& fileName)
 
 	return fn;
 }
-/*
-BadDictFileException::BadDictFileException(const char* path_, const string& info_)
-	:path(path_)
-	,info(info_)
-{
-	//NOTE on C++20
-	//std::format("Cannot read file '{}'. Check if file exists", dicFileName)
-	msg = ((std::string("Bad file '") += path) + "': ") + info;
-}
 
-const char* BadDictFileException::what() const  noexcept
-{
-	return msg.c_str();
-}
-*/
