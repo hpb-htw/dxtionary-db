@@ -183,12 +183,12 @@ tuple<string,string> Dxtionary::buildCreateTableStatement(const vector<string>& 
 
 
 
-void DictFileProcessor::processDictFile(const char* dictPath, Dxtionary& dxtionary) const
+void DictFileProcessor::processDictFile(const char* gzipDictPath, Dxtionary& dxtionary) const
 {
 
-	ifstream ifs(dictPath, ios::in | ios::binary);
+	ifstream ifs(gzipDictPath, ios::in | ios::binary);
 	if (!ifs) {
-		throw DictFileNotReadable(dictPath);
+		throw DictFileNotReadable(gzipDictPath);
 	}
 	GZFileStreamBuffer gzBuffer(&ifs);
 	istream decompressedStream(&gzBuffer);

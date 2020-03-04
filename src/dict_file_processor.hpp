@@ -28,7 +28,7 @@ public:
 		,maximumCache(maxCache)
 	{ /*Nothing to write*/ }
 	/**
-	 * create a table with given name and given column names. All columns have data-type TEXT.
+	 * create a table with given column names. All columns have data-type TEXT.
 	 * */
 	virtual void createTextTable(const vector<string>& columnNames) ;
 	/**
@@ -64,11 +64,11 @@ public:
 		:delimiter(delimiter_)
 	{/**/}
 	/**
-	 * gunzip file {@param dictPath} to import its conten to a Dictionary
+	 * gunzip file {@param gzipDictPath} to import its conten to a Dictionary
 	 * {@param dict}
 	 * may throw {@class BadDictFileException} if dictionary is not readable.
 	 * */
-	void processDictFile(const char *dictPath, Dxtionary &dict) const;
+	void processDictFile(const char *gzipDictPath, Dxtionary &dict) const;
 
 	/**
 	 * read {@param rawDictionaryDataStream} line-by-line to reach the first non-empty line,
