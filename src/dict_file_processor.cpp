@@ -268,18 +268,4 @@ string dictFileNameToSqlTableName(const string& fileName)
 
 	return fn;
 }
-/*
-BadDictFileException::BadDictFileException(const char* path_, const string& info_)
-	:path(path_)
-	,info(info_)
-{
-	//NOTE on C++20
-	//std::format("Cannot read file '{}'. Check if file exists", dicFileName)
-	msg = ((std::string("Bad file '") += path) + "': ") + info;
-}
 
-const char* BadDictFileException::what() const  noexcept
-{
-	return msg.c_str();
-}
-*/

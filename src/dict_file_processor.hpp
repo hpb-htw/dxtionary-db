@@ -165,12 +165,14 @@ public:
 	explicit DatabaseError(const char* originError, const char* extraInfo = "")
 		:msg(originError)
 		,extraInfo(extraInfo)
-	{ }
+	{
+		allInfo = (msg + string(" ")) + extraInfo;
+	}
 	explicit DatabaseError(const string& originError, const string& extraInfo_ = "")
 		:msg(originError)
 		,extraInfo(extraInfo_)
 	{
-		allInfo = msg + string(" ") + extraInfo;
+		allInfo = (msg + string(" ")) + extraInfo;
 	}
 
 	const char* what() const noexcept

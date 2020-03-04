@@ -220,6 +220,36 @@ bla;bla;bla
 
 	}
 
+	TEST(dict_file_processor_DatabaseError, message_as_expected)
+	{
+		const char* originError = "Some error";
+		const char* extraInfo = "Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
+		const char* expected = "Some error Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
+		try
+		{
+			DatabaseError error(originError, extraInfo);
+			throw error;
+		}catch (const DatabaseError& ex)
+		{
+			ASSERT_STREQ(ex.what() , expected);
+		}
+	}
+
+	TEST(dict_file_processor_DatabaseError, message_as_expected_2)
+	{
+		string originError = "Some error";
+		string extraInfo = "Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
+		const char* expected = "Some error Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
+		try
+		{
+			DatabaseError error(originError, extraInfo);
+			throw error;
+		}catch (const DatabaseError& ex)
+		{
+			ASSERT_STREQ(ex.what() , expected);
+		}
+	}
+
 	TEST_F(DbTestFixture, dict_file_processor_Dxtionary_createTextTable)
 	{
 		Dxtionary db(dbPath, dictionaryTableName);
