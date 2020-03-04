@@ -268,7 +268,7 @@ string dictFileNameToSqlTableName(const string& fileName)
 
 	return fn;
 }
-
+/*
 BadDictFileException::BadDictFileException(const char* path_, const string& info_)
 	:path(path_)
 	,info(info_)
@@ -282,4 +282,4 @@ const char* BadDictFileException::what() const  noexcept
 {
 	return msg.c_str();
 }
-
+*/

@@ -99,5 +99,21 @@ namespace TEST_DXTIONARY_BIND {
 			delete [] query;
 		}
 	}
-
+	//   = test not happy execution-path =
+	//  == test error code when database does not exist ==
+	TEST_F(DbTestFixture, dxtionary_bind_test_return_error_code_when_db_file_not_accesabel) {
+		const char* filename = "/tmp/not/existing/db/file.sqlite";
+		const char* query = "SELECT soundex('Phantom') AS soundex;";
+		ostringstream err;
+		int rc = executeSqlQuery(filename, query, callback, err);
+		ASSERT_EQ(rc, dxtionary::BAD_DATABASE_FILE);
+	}
+	//  == test error code when syntax of querey not correct
+	TEST_F(DbTestFixture, dxtionary_bind_test_return_error_code_when_syntax_not_correct) {
+		const char* filename = ":memory:";
+		const char* query = "SELECT not_a_function('Phantom') AS soundex;";
+		ostringstream err;
+		int rc = executeSqlQuery(filename, query, callback, err);
+		ASSERT_EQ(rc, dxtionary::BAD_QUERY);
+	}
 }

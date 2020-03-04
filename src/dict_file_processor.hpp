@@ -128,8 +128,18 @@ static inline void trim(std::string &s)
 class BadDictFileException: public exception
 {
 public:
-	explicit BadDictFileException(const char* path_, const string& info_="");
-	const char * what() const  noexcept ;
+	explicit BadDictFileException(const char* path_, const string& info_="")
+		:path(path_)
+		,info(info_)
+	{
+		//NOTE on C++20
+		//std::format("Cannot read file '{}'. Check if file exists", dicFileName)
+		msg = ((std::string("Bad file '") += path) + "': ") + info;
+	}
+	const char * what() const  noexcept
+	{
+		return msg.c_str();
+	}
 private:
 	string path;
 	string info;

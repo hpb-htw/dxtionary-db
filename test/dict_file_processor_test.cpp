@@ -191,6 +191,35 @@ bla;bla;bla
 		ASSERT_EQ(sqlInsertInto, expectedSqlInsert);
 	}
 
+	TEST(dict_file_processor_DictFileNotExist, message_as_expected)
+	{
+		const char* dbpath = "ein/path/to/db.sqlite";
+		const char* expected = "Bad file 'ein/path/to/db.sqlite': File not exits";
+		try
+		{
+			DictFileNotExist error(dbpath);
+			throw error;
+		} catch (const DictFileNotExist& ex)
+		{
+			ASSERT_STREQ(ex.what(), expected);
+		}
+	}
+
+	TEST(dict_file_processor_DictFileNotReadable, message_as_expected)
+	{
+		const char* dbpath = "ein/path/to/db.sqlite";
+		const char* expected = "Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
+		try
+		{
+			DictFileNotReadable error(dbpath);
+			throw error;
+		}catch (const DictFileNotReadable& ex)
+		{
+			ASSERT_STREQ(ex.what() , expected);
+		}
+
+	}
+
 	TEST_F(DbTestFixture, dict_file_processor_Dxtionary_createTextTable)
 	{
 		Dxtionary db(dbPath, dictionaryTableName);
