@@ -17,6 +17,36 @@ const string DEFAULT_DELIMITER = ";";
  * */
 bool checkFileExist(const char* path) ;
 
+
+
+class DatabaseError: public exception {
+public:
+	explicit DatabaseError(const char* originError, const char* extraInfo = "")
+		:msg(originError)
+		 ,extraInfo(extraInfo)
+	{
+		allInfo = (msg + string(" ")) + extraInfo;
+	}
+	explicit DatabaseError(const string& originError, const string& extraInfo_ = "")
+		:msg(originError)
+		 ,extraInfo(extraInfo_)
+	{
+		allInfo = (msg + string(" ")) + extraInfo;
+	}
+
+	const char* what() const noexcept
+	{
+		return allInfo.c_str();
+	}
+	~DatabaseError()
+	{
+	}
+private:
+	string msg;
+	string extraInfo;
+	string allInfo;
+};
+
 /** use one instance for a table */
 class Dxtionary
 {
@@ -56,6 +86,17 @@ private:
 	size_t lineCount = 0;
 	static int noop(void *NotUsed, int argc, char **argv, char **azColName) {return 0;}
 	inline void executeSqlNoOp(const string& sqlCmd);
+	inline void handleSqliteError(sqlite3* db, const char* extraInfo)
+	{
+		const char* errorMsg = sqlite3_errmsg(db);
+		DatabaseError ex(errorMsg, extraInfo);
+		cache.clear();// clean up cache, so that the destructor does not call flush()
+		try
+		{
+			sqlite3_close(db); // force close db, don't care about return value
+		}catch (...) { /* ignore all */ }
+		throw ex;
+	}
 };
 
 class DictFileProcessor {
@@ -160,37 +201,6 @@ public:
 	{}
 };
 
-class DatabaseError: public exception {
-public:
-	explicit DatabaseError(const char* originError, const char* extraInfo = "")
-		:msg(originError)
-		,extraInfo(extraInfo)
-	{
-		allInfo = (msg + string(" ")) + extraInfo;
-	}
-	explicit DatabaseError(const string& originError, const string& extraInfo_ = "")
-		:msg(originError)
-		,extraInfo(extraInfo_)
-	{
-		allInfo = (msg + string(" ")) + extraInfo;
-	}
 
-	const char* what() const noexcept
-	{
-		return allInfo.c_str();
-	}
-	~DatabaseError()
-	{
-	}
-private:
-	string msg;
-	string extraInfo;
-    string allInfo;
-};
 
-static inline void handleSqliteError(sqlite3* db, const char* extraInfo)
-{
-	const char* errorMsg = sqlite3_errmsg(db);
-	sqlite3_close(db); // force close db, don't care about return value
-	throw DatabaseError(errorMsg, extraInfo);
-}
+

@@ -36,7 +36,7 @@ namespace {
 		ASSERT_EQ( i , expectedLines.size() );
 	}
 
-	TEST(GZFileStreamBuffer, throw_exception_for_badfile)
+	TEST(GZFileStreamBuffer, method_bad_is_true_for_bad_data)
 	{
 		const char* testDataPath = "./bad-data.txt.gz";
 		ifstream testDataFileStream(testDataPath, ios::in | ios::binary);

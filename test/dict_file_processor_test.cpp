@@ -237,7 +237,8 @@ bla;bla;bla
 	}
 }
 
-namespace DXTIONARY {
+namespace DXTIONARY
+{
 	TEST(Dxtionary, buildCreateTableStatement)
 	{
 		TextualDxtionaryDb db ("nix", "nix");
@@ -253,7 +254,7 @@ namespace DXTIONARY {
 
 
 
-	TEST_F(DbTestFixture, dict_file_processor_Dxtionary_createTextTable)
+	TEST_F(DbTestFixture, Dxtionary_createTextTable)
 	{
 		Dxtionary db(dbPath, dictionaryTableName);
 		vector<string> columns = {
@@ -270,7 +271,7 @@ namespace DXTIONARY {
 	}
 
 
-	TEST_F(DbTestFixture, dict_file_processor_Dxtionary_insertText)
+	TEST_F(DbTestFixture, Dxtionary_insertText)
 	{
 		Dxtionary db(dbPath, dictionaryTableName, 4);
 		vector<string> columns = {
@@ -290,6 +291,25 @@ namespace DXTIONARY {
 		{
 			ASSERT_NO_THROW( db.insertText(d) );
 		}
+	}
+
+	TEST(Dxtionary, bad_sqlite_db)
+	{
+		Dxtionary db("/tmp/file/not/found.sqlite", dictionaryTableName, 4);
+		vector<string> columns = {
+			"col_1", "col_2", "col_3"
+		};
+		ASSERT_THROW(
+		{
+			db.createTextTable(columns);
+		}, DatabaseError);
+	}
+
+	TEST(Dxtionary, bad_insert)
+	{
+		Dxtionary db(":memory:", "some_table", 0);
+		vector<string> singleData = {"data1", "data2", "data3"};
+		ASSERT_THROW({db.insertText(singleData);}, DatabaseError);
 	}
 }
 

@@ -51,7 +51,7 @@ void Dxtionary::createTextTable(const vector<string> &columnNames)
 void Dxtionary::insertText(const vector<string>& textRow)
 {
 	cache.push_back(textRow);
-	if (cache.size() == maximumCache)
+	if (cache.size() >= maximumCache)
 	{
 		flush();
 	}
@@ -105,12 +105,14 @@ void Dxtionary::flush()
 			if(bindRc != SQLITE_OK)
 			{
 				handleSqliteError(mDb, "Cannot bind value to Sql sttm");
+				return;
 			}
 		}
 
 		if (sqlite3_step(stmt) != SQLITE_DONE)
 		{
 			handleSqliteError(mDb,  "Cannot execute Sql sttm");
+			return;
 		}
 		sqlite3_reset(stmt);
 	}
@@ -119,6 +121,7 @@ void Dxtionary::flush()
 	{
 		cerr << errorMessage;
 		handleSqliteError(mDb, "Cannot commit transaction");
+		return;
 	}
 	sqlite3_finalize(stmt);
 	cache.clear();
