@@ -293,7 +293,7 @@ namespace DXTIONARY
 		}
 	}
 
-	TEST(Dxtionary, bad_sqlite_db)
+	TEST(Dxtionary, create_bad_sqlite_db)
 	{
 		Dxtionary db("/tmp/file/not/found.sqlite", dictionaryTableName, 4);
 		vector<string> columns = {
@@ -305,9 +305,16 @@ namespace DXTIONARY
 		}, DatabaseError);
 	}
 
-	TEST(Dxtionary, bad_insert)
+	TEST(Dxtionary, insert_bad_table)
 	{
 		Dxtionary db(":memory:", "some_table", 0);
+		vector<string> singleData = {"data1", "data2", "data3"};
+		ASSERT_THROW({db.insertText(singleData);}, DatabaseError);
+	}
+
+	TEST(Dxtionary, insert_bad_sqlite_db)
+	{
+		Dxtionary db("/tmp/file/not/exists.sqlite", "some_table", 0);
 		vector<string> singleData = {"data1", "data2", "data3"};
 		ASSERT_THROW({db.insertText(singleData);}, DatabaseError);
 	}

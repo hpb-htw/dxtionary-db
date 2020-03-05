@@ -89,13 +89,12 @@ private:
 	inline void handleSqliteError(sqlite3* db, const char* extraInfo)
 	{
 		const char* errorMsg = sqlite3_errmsg(db);
-		DatabaseError ex(errorMsg, extraInfo);
 		cache.clear();// clean up cache, so that the destructor does not call flush()
 		try
 		{
 			sqlite3_close(db); // force close db, don't care about return value
 		}catch (...) { /* ignore all */ }
-		throw ex;
+		throw DatabaseError(errorMsg, extraInfo);;
 	}
 };
 
