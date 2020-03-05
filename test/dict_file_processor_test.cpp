@@ -5,14 +5,16 @@
 #include "gtest/gtest.h"
 #include "dict_file_processor.hpp"
 
+#include <iostream>
 using namespace std;
 
-namespace _TEST_ {
+namespace DICT_FILE_PROCESSOR
+{
 	vector<string> columnNames;
 	vector<vector<string>> dictionaryContent;
-	string sqlCreateTable ;
-	string sqlInsertInto ;
-	class DummyDxtionaryDb : public Dxtionary {
+
+	class DummyDxtionaryDb : public Dxtionary
+	{
 	public:
 		DummyDxtionaryDb(const char *dbPath, const string &tableName)
 			: Dxtionary(dbPath, tableName)
@@ -21,17 +23,24 @@ namespace _TEST_ {
 			dictionaryContent.clear();
 		}
 
-		void createTextTable(const vector<string> &columnNames_) override {
-			for (const string &name : columnNames_) {
+		void createTextTable(const vector<string> &columnNames_) override
+		{
+			for (const string &name : columnNames_)
+			{
 				columnNames.push_back(name);
 			}
 		}
 
-		void insertText(const vector<string> &textRow) override {
+		void insertText(const vector<string> &textRow) override
+		{
 			dictionaryContent.push_back(textRow);
 		}
 	};
+}
 
+namespace DXTIONARY {
+	string sqlCreateTable ;
+	string sqlInsertInto ;
 	class TextualDxtionaryDb : public Dxtionary {
 	public:
 		TextualDxtionaryDb(const char *dbPath, const string &tableName)
@@ -75,23 +84,41 @@ namespace _TEST_ {
 	};
 }
 
-namespace _TEST_ {
-	TEST(dict_file_processor, trim)
+// test for in Inline function in HPP-Files
+namespace INLINE_FUNCTION
+{
+	TEST(trim, both_left_and_right)
 	{
 		string text = " blabla   ";
 		trim(text);
 		ASSERT_EQ(text, "blabla");
 	}
 
-	TEST(dict_file_processor, trim_empty)
+	TEST(trim, empty)
 	{
 		string text = "    ";
 		trim(text);
 		ASSERT_EQ(text, "");
 		ASSERT_TRUE(text.empty());
 	}
+}
 
-	TEST(dict_file_processor, parseTextToVector)
+namespace CPP_FUNCTION
+{
+
+	TEST(checkFileExist, shout_return_true_when_file_exists) {
+		const char* filePath = "../dxtionary_version.h"; // filename of this test file
+		bool fileExists = checkFileExist(filePath);
+		ASSERT_TRUE(fileExists);
+	}
+
+	TEST(checkFileExist, shout_return_false_when_file_exists) {
+		const char* filePath = "../not-exist-file.h"; // filename of this test file
+		bool fileExists = checkFileExist(filePath);
+		ASSERT_FALSE(fileExists);
+	}
+
+	TEST(parseTextToVector, simple)
 	{
 		string text = "wortart::wordtrennung::bebeutung";
 		vector<string> expectedColumns = {
@@ -101,7 +128,7 @@ namespace _TEST_ {
 		ASSERT_EQ(parsedColumns, expectedColumns);
 	}
 
-	TEST(dict_file_processor, dictFileNameToSqlTableName_relative)
+	TEST(dictFileNameToSqlTableName, relative)
 	{
 		string fileName = "../big-file/dewiktionary.csv.gz";
 		string tableName = dictFileNameToSqlTableName(fileName);
@@ -109,7 +136,7 @@ namespace _TEST_ {
 		ASSERT_EQ(tableName, expected);
 	}
 
-	TEST(dict_file_processor, dictFileNameToSqlTableName_absolute)
+	TEST(dictFileNameToSqlTableName, absolute)
 	{
 		string fileName = "/home/user/big-file/dewiktionary.csv.gz";
 		string tableName = dictFileNameToSqlTableName(fileName);
@@ -117,7 +144,7 @@ namespace _TEST_ {
 		ASSERT_EQ(tableName, expected);
 	}
 
-	TEST(dict_file_processor, dictFileNameToSqlTableName_no_extension)
+	TEST(dictFileNameToSqlTableName, file_does_not_have_extension)
 	{
 		string fileName = "/home/user/big-file/dewiktionary";
 		string tableName = dictFileNameToSqlTableName(fileName);
@@ -125,15 +152,18 @@ namespace _TEST_ {
 		ASSERT_EQ(tableName, expected);
 	}
 
-	TEST(dict_file_processor, dictFileNameToSqlTableName_replaceSpaces)
+	TEST(dictFileNameToSqlTableName, replace_spaces_in_file)
 	{
 		string fileName = "/home/user/big-file/de wiktionary";
 		string tableName = dictFileNameToSqlTableName(fileName);
 		string expected = "de_wiktionary";
 		ASSERT_EQ(tableName, expected);
 	}
+}
 
-	TEST(dict_file_processor, importEntryField)
+namespace DICT_FILE_PROCESSOR
+{
+	TEST(DictFileProcessor, importEntryField)
 	{
 		string fiels = R"str(
 # dieses Wortbuch ist ein Copy von deutsche wiktinary
@@ -145,13 +175,13 @@ N;test-wort;nix
 		)str";
 		DummyDxtionaryDb db("nix", "nix");
 		istringstream inputStream(fiels);
-		DictFileProcessor p("=>") ;
+		DictFileProcessor p("=>");
 		p.importEntryField(inputStream, db);
-		vector<string> expected = {"wortart","worttrennung", "bedeutung"};
+		vector<string> expected = {"wortart", "worttrennung", "bedeutung"};
 		ASSERT_EQ(columnNames, expected);
 	}
 
-	TEST(dict_file_processor, importDictionaryContent)
+	TEST(DictFileProcessor, importDictionaryContent)
 	{
 		string dictContent = R"sep(
 # dieses Wortbuch ist ein Copy von deutsche wiktinary
@@ -167,18 +197,36 @@ bla;bla;bla
 )sep";
 		DummyDxtionaryDb db("nix", "nix");
 		istringstream inputStream(dictContent);
-		DictFileProcessor p(";") ;
+		DictFileProcessor p(";");
 		p.importEntryField(inputStream, db);
 		p.importDictionaryContent(inputStream, db);
 		vector<vector<string>> expected = {
-			{"verb","test-verb","nix"},
-			{"adj","test-adj","nix2"},
-			{"bla","bla","bla"}
+			{"verb", "test-verb", "nix"},
+			{"adj",  "test-adj",  "nix2"},
+			{"bla",  "bla",       "bla"}
 		};
 		ASSERT_EQ(dictionaryContent, expected);
 	}
 
-	TEST(dict_file_processor_Dxtionary, buildCreateTableStatement)
+	TEST(DictFileProcessor, processDictFile)
+	{
+		const char* gzipDictPath = "./gzipPlaintextDict.csv.gz";
+		DummyDxtionaryDb db("nix", "nix");
+		DictFileProcessor p("<separator>");
+		p.processDictFile(gzipDictPath, db);
+		vector<vector<string>> expected = {
+			{"apple", "green", "1kg"},
+			{ "berry", "viollet", "5kg" },
+			{ "banana", "yellow", "2kg" },
+			{ "cherry", "red", "1.3kg" }
+		};
+		cout << dictionaryContent[0][0] << endl;
+		ASSERT_EQ(dictionaryContent, expected);
+	}
+}
+
+namespace DXTIONARY {
+	TEST(Dxtionary, buildCreateTableStatement)
 	{
 		TextualDxtionaryDb db ("nix", "nix");
 		vector<string> columns = {
@@ -191,64 +239,7 @@ bla;bla;bla
 		ASSERT_EQ(sqlInsertInto, expectedSqlInsert);
 	}
 
-	TEST(dict_file_processor_DictFileNotExist, message_as_expected)
-	{
-		const char* dbpath = "ein/path/to/db.sqlite";
-		const char* expected = "Bad file 'ein/path/to/db.sqlite': File not exits";
-		try
-		{
-			DictFileNotExist error(dbpath);
-			throw error;
-		} catch (const DictFileNotExist& ex)
-		{
-			ASSERT_STREQ(ex.what(), expected);
-		}
-	}
 
-	TEST(dict_file_processor_DictFileNotReadable, message_as_expected)
-	{
-		const char* dbpath = "ein/path/to/db.sqlite";
-		const char* expected = "Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
-		try
-		{
-			DictFileNotReadable error(dbpath);
-			throw error;
-		}catch (const DictFileNotReadable& ex)
-		{
-			ASSERT_STREQ(ex.what() , expected);
-		}
-
-	}
-
-	TEST(dict_file_processor_DatabaseError, message_as_expected)
-	{
-		const char* originError = "Some error";
-		const char* extraInfo = "Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
-		const char* expected = "Some error Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
-		try
-		{
-			DatabaseError error(originError, extraInfo);
-			throw error;
-		}catch (const DatabaseError& ex)
-		{
-			ASSERT_STREQ(ex.what() , expected);
-		}
-	}
-
-	TEST(dict_file_processor_DatabaseError, message_as_expected_2)
-	{
-		string originError = "Some error";
-		string extraInfo = "Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
-		const char* expected = "Some error Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
-		try
-		{
-			DatabaseError error(originError, extraInfo);
-			throw error;
-		}catch (const DatabaseError& ex)
-		{
-			ASSERT_STREQ(ex.what() , expected);
-		}
-	}
 
 	TEST_F(DbTestFixture, dict_file_processor_Dxtionary_createTextTable)
 	{
@@ -289,6 +280,71 @@ bla;bla;bla
 		}
 	}
 }
+
+
+namespace EXCEPTIONS
+{
+	TEST(DictFileNotExist, message_as_expected)
+	{
+		const char* dbpath = "ein/path/to/db.sqlite";
+		const char* expected = "Bad file 'ein/path/to/db.sqlite': File not exits";
+		try
+		{
+			DictFileNotExist error(dbpath);
+			throw error;
+		} catch (const DictFileNotExist& ex)
+		{
+			ASSERT_STREQ(ex.what(), expected);
+		}
+	}
+
+	TEST(DictFileNotReadable, message_as_expected)
+	{
+		const char* dbpath = "ein/path/to/db.sqlite";
+		const char* expected = "Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
+		try
+		{
+			DictFileNotReadable error(dbpath);
+			throw error;
+		}catch (const DictFileNotReadable& ex)
+		{
+			ASSERT_STREQ(ex.what() , expected);
+		}
+
+	}
+
+	TEST(DatabaseError, message_as_expected)
+	{
+		const char* originError = "Some error";
+		const char* extraInfo = "Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
+		const char* expected = "Some error Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
+		try
+		{
+			DatabaseError error(originError, extraInfo);
+			throw error;
+		}catch (const DatabaseError& ex)
+		{
+			ASSERT_STREQ(ex.what() , expected);
+		}
+	}
+
+	TEST(DatabaseError, message_as_expected_2)
+	{
+		string originError = "Some error";
+		string extraInfo = "Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
+		const char* expected = "Some error Bad file 'ein/path/to/db.sqlite': File not readable, or empty";
+		try
+		{
+			DatabaseError error(originError, extraInfo);
+			throw error;
+		}catch (const DatabaseError& ex)
+		{
+			ASSERT_STREQ(ex.what() , expected);
+		}
+	}
+}
+
+
 
 
 
