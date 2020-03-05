@@ -41,6 +41,7 @@ enable_testing()
 include(GoogleTest)
 message(STATUS ${PROJECT_BINARY_DIR})
 configure_file(${PROJECT_SOURCE_DIR}/data.txt.gz ${PROJECT_BINARY_DIR}/data.txt.gz COPYONLY)
+configure_file(${PROJECT_SOURCE_DIR}/bad-data.txt.gz ${PROJECT_BINARY_DIR}/bad-data.txt.gz COPYONLY)
 configure_file(${PROJECT_SOURCE_DIR}/gzipPlaintextDict.csv.gz ${PROJECT_BINARY_DIR}/gzipPlaintextDict.csv.gz COPYONLY)
 
 function(add_executable_unit_test TARGET MAIN_CPP DEPENDENCIES)

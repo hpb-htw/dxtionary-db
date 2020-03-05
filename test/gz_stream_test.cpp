@@ -7,10 +7,12 @@
 using namespace std;
 
 namespace {
-	TEST(gz_stream, ungzip_file) {
+	TEST(GZFileStreamBuffer, ungzip_file)
+	{
 		const char* testDataPath = "./data.txt.gz";
 		ifstream testDataFileStream(testDataPath, ios::in | ios::binary);
-		if(!testDataFileStream) {
+		if(!testDataFileStream)
+		{
 			FAIL() << "Cannot open file '" << testDataPath << "' as stream. Check if file exist";
 		}
 		GZFileStreamBuffer gzBuffer(&testDataFileStream);
@@ -32,5 +34,27 @@ namespace {
 			//i = i + 1;
 		}
 		ASSERT_EQ( i , expectedLines.size() );
+	}
+
+	TEST(GZFileStreamBuffer, throw_exception_for_badfile)
+	{
+		const char* testDataPath = "./bad-data.txt.gz";
+		ifstream testDataFileStream(testDataPath, ios::in | ios::binary);
+		if(!testDataFileStream)
+		{
+			FAIL() << "Cannot open file '" << testDataPath << "' as stream. Check if file exist";
+		}
+		GZFileStreamBuffer gzBuffer(&testDataFileStream);
+
+		istream decompressedStream(&gzBuffer);
+		size_t i = 0;
+		while(!decompressedStream.eof() && !decompressedStream.bad() )
+		{
+			string line;
+			getline(decompressedStream, line);
+			cout << i << ' ' << line << endl;
+			i = i + 1;
+		}
+		ASSERT_TRUE(decompressedStream.bad() );
 	}
 }
