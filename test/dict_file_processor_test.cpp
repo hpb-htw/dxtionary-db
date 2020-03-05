@@ -10,17 +10,14 @@ using namespace std;
 
 namespace DICT_FILE_PROCESSOR
 {
-	vector<string> columnNames;
-	vector<vector<string>> dictionaryContent;
 
 	class DummyDxtionaryDb : public Dxtionary
 	{
 	public:
 		DummyDxtionaryDb(const char *dbPath, const string &tableName)
-			: Dxtionary(dbPath, tableName)
+			:Dxtionary(dbPath, tableName)
 		{
-			columnNames.clear();
-			dictionaryContent.clear();
+
 		}
 
 		void createTextTable(const vector<string> &columnNames_) override
@@ -35,6 +32,18 @@ namespace DICT_FILE_PROCESSOR
 		{
 			dictionaryContent.push_back(textRow);
 		}
+
+		vector<string> getColumnNames()
+		{
+			return this-> columnNames;
+		}
+
+		vector<vector<string>> getDictionaryContent() {
+			return this->dictionaryContent;
+		}
+	private:
+		vector<string> columnNames = {};
+		vector<vector<string>> dictionaryContent = {};
 	};
 }
 
@@ -178,7 +187,7 @@ N;test-wort;nix
 		DictFileProcessor p("=>");
 		p.importEntryField(inputStream, db);
 		vector<string> expected = {"wortart", "worttrennung", "bedeutung"};
-		ASSERT_EQ(columnNames, expected);
+		ASSERT_EQ(db.getColumnNames(), expected);
 	}
 
 	TEST(DictFileProcessor, importDictionaryContent)
@@ -205,7 +214,7 @@ bla;bla;bla
 			{"adj",  "test-adj",  "nix2"},
 			{"bla",  "bla",       "bla"}
 		};
-		ASSERT_EQ(dictionaryContent, expected);
+		ASSERT_EQ(db.getDictionaryContent(), expected);
 	}
 
 	TEST(DictFileProcessor, processDictFile)
@@ -220,8 +229,11 @@ bla;bla;bla
 			{ "banana", "yellow", "2kg" },
 			{ "cherry", "red", "1.3kg" }
 		};
-		cout << dictionaryContent[0][0] << endl;
-		ASSERT_EQ(dictionaryContent, expected);
+		ASSERT_EQ( db.getDictionaryContent() , expected);
+		vector<string> expectedColumns = {
+			"fruit", "color", "weight"
+		};
+
 	}
 }
 
