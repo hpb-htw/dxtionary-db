@@ -45,4 +45,3 @@ cell-2-1<separator>cell-2-2<separator>cell-2-3
 
 for this version the delimiter must be exactly `<separator`. This rule may be changed in next versions.
 
-
