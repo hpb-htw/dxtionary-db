@@ -1,4 +1,4 @@
-#Copy of SQLite Amalgamation
+# Copy of SQLite Amalgamation
 
 To compile Sqlite with Spellfix extension you need:
 
