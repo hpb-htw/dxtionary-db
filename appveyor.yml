@@ -3,6 +3,7 @@ environment:
     secure: YEOldcmUtP23lCJLGxBYZu8TCFlb9DX+IWGK761pexF2fhy9VrDdt3cmWW1jLTt/
 image:
   - Ubuntu1804
+  - Ubuntu2004
 
 branches:
   only:
