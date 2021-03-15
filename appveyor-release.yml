@@ -57,8 +57,8 @@ for:
     test_script:
       - cd test
       - ctest
--
-    matrix: # LINUX UBUNTU 1804
+  -
+    matrix: # LINUX UBUNTU 2004
       only:
         - image: Ubuntu2004
 
