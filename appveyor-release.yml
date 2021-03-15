@@ -4,6 +4,7 @@ environment:
 image:
   - macos
   - Ubuntu1804
+  - Ubuntu2004
   - Visual Studio 2019
 
 branches:
@@ -34,9 +35,32 @@ for:
       - cd test
       - ctest -C Debug
   -
-    matrix: # LINUX UBUNTU
+    matrix: # LINUX UBUNTU 1804
       only:
         - image: Ubuntu1804
+
+    install:
+      - sudo apt install gcc-8 g++-8
+      - sudo update-alternatives --remove-all gcc; true
+      - sudo update-alternatives --remove-all g++; true
+      - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 10
+      - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 10
+      - sudo update-alternatives --set cc /usr/bin/gcc
+      - sudo update-alternatives --set c++ /usr/bin/g++
+      - git submodule update --init --recursive
+
+    build_script:
+      - cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - cd build
+      - cmake --build .
+
+    test_script:
+      - cd test
+      - ctest
+-
+    matrix: # LINUX UBUNTU 1804
+      only:
+        - image: Ubuntu2004
 
     install:
       - sudo apt install gcc-8 g++-8
